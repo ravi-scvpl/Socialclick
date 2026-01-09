@@ -13,7 +13,9 @@ export async function GET(request) {
 
   const urlRecord = await Prisma.Link.findFirst({
     where: {
-      shortURL: domain + slug,
+      shortURL: {
+        endsWith: "/" + slug,
+      },
     },
     select: {
       originalURL: true,
@@ -32,7 +34,7 @@ export async function GET(request) {
   }
   await Prisma.Link.update({
     where: {
-      shortURL: domain + slug,
+      id: urlRecord.id,
     },
     data: { clicks: { increment: 1 } },
   });
@@ -117,7 +119,7 @@ async function getSourceInfo(source) {
     .catch((error) => {
       console.error("An error occurred:", error);
     });
-    console.log("Raw Data")
-    console.log(rawData);
-  return {title: rawData.title, sitename: rawData.sitename, url: rawData.url, description: rawData.description, images: rawData.images};
+  console.log("Raw Data")
+  console.log(rawData);
+  return { title: rawData.title, sitename: rawData.sitename, url: rawData.url, description: rawData.description, images: rawData.images };
 }
