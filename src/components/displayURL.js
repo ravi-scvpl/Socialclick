@@ -123,17 +123,15 @@ export default function DisplayUrl({ variant = "home" }) {
             autoComplete={"off"}
           ></Input>
           <Input
-            startDecorator={`http://${
-              ENVIRONMENT === "dev" ? "localhost:3000/" : "tinyclicks.co/"
-            }`}
+            startDecorator={`http://${ENVIRONMENT === "dev" ? "localhost:3000/" : `${(process.env.NEXT_PUBLIC_BASE_URL || "socialclicks.co").replace(/^https?:\/\//, '')}/`
+              }`}
             type="text"
             id="aliasInput"
             className="h-[40px] w-[60%] px-4 bg-gray-100 focus:outline-payne-gray focus:outline "
             placeholder="Alias"
             onChange={(e) => {
               setAlias(
-                `http://${
-                  ENVIRONMENT === "dev" ? "localhost:3000/" : "tinyclicks.co/"
+                `http://${ENVIRONMENT === "dev" ? "localhost:3000/" : `${(process.env.NEXT_PUBLIC_BASE_URL || "socialclicks.co").replace(/^https?:\/\//, '')}/`
                 }` + e.target.value
               );
               setRawAlias(e.target.value);
