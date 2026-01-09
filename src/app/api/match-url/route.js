@@ -47,19 +47,24 @@ export async function GET(request) {
   const browser = searchParams.get("browser");
   if (source.length == 0) source = null;
 
-  await Prisma.Traffic.create({
-    data: {
-      link: {
-        connect: {
-          id: urlRecord.id,
+  try {
+    const safeUserInfo = userInfo || {};
+    await Prisma.Traffic.create({
+      data: {
+        link: {
+          connect: {
+            id: urlRecord.id,
+          },
         },
+        location: safeUserInfo,
+        browser,
+        device,
+        source: sourceJSON,
       },
-      location: userInfo,
-      browser,
-      device,
-      source: sourceJSON,
-    },
-  });
+    });
+  } catch (err) {
+    console.error("Error logging traffic, but proceeding with redirect:", err);
+  }
   return new NextResponse(
     JSON.stringify({ url: originalURL, message: "MATCH FOUND" }),
     {
