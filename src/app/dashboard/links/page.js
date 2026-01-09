@@ -109,9 +109,9 @@ export default function Links() {
       return item.name !== null
         ? item.name.toLowerCase().includes(searchTerm.toLowerCase())
         : item.originalURL
-            .slice(7)
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
+          .slice(7)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
     });
 
     setFilteredResults(results);
@@ -389,7 +389,7 @@ export default function Links() {
                           </div>
                           <div
                             href=""
-                            className="text-[.75em] font-medium opacity-75 italic" 
+                            className="text-[.75em] font-medium opacity-75 italic"
                           >
                             {link.originalURL}
                           </div>
@@ -422,9 +422,8 @@ export default function Links() {
 
                         {renameRes && (
                           <div
-                            className={`${
-                              renameRes.status != 200 ? "bg-red-600" : ""
-                            }`}
+                            className={`${renameRes.status != 200 ? "bg-red-600" : ""
+                              }`}
                           >
                             {renameRes.message}
                           </div>
@@ -476,7 +475,7 @@ export default function Links() {
                             <Sheet>
                               {ENVIRONMENT === "dev"
                                 ? "localhost:3000/"
-                                : "tinyclicks.co/"}
+                                : `${(process.env.NEXT_PUBLIC_BASE_URL || "socialclicks.co").replace(/^https?:\/\//, '')}/`}
                             </Sheet>
                           }
                           type="text"
@@ -490,9 +489,8 @@ export default function Links() {
 
                         {renameRes && (
                           <div
-                            className={`${
-                              renameRes.status != 200 ? "bg-red-600" : ""
-                            }`}
+                            className={`${renameRes.status != 200 ? "bg-red-600" : ""
+                              }`}
                           >
                             {renameRes.message}
                           </div>
@@ -542,9 +540,8 @@ export default function Links() {
                         ></Input>
                         {renameRes && (
                           <div
-                            className={`${
-                              renameRes.status != 200 ? "bg-red-600" : ""
-                            }`}
+                            className={`${renameRes.status != 200 ? "bg-red-600" : ""
+                              }`}
                           >
                             {renameRes.message}
                           </div>

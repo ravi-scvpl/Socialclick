@@ -20,14 +20,14 @@ export default function DashNav() {
   const dashPages = [
     { name: "Overview", route: "/dashboard", icon: <Dashboard />, disabled: false },
     { name: "Analytics", route: "/dashboard/analytics", icon: <BarChart />, disabled: true },
-    { name: "Geography", route: "/dashboard/geography", icon: <Public />, disabled: false},
+    { name: "Geography", route: "/dashboard/geography", icon: <Public />, disabled: false },
     {
       name: "Demographics",
       route: "/dashboard/demographics",
       icon: <Groups3Icon />,
       disabled: true,
     },
-    { name: "My Links", route: "/dashboard/links", icon: <Link />, disabled: false,},
+    { name: "My Links", route: "/dashboard/links", icon: <Link />, disabled: false, },
   ];
 
   useEffect(() => {
@@ -41,18 +41,17 @@ export default function DashNav() {
       >
         <Sheet sx={{ width: "100%" }}>
           <div className="w-full h-[80px] flex flex-col items-center justify-center">
-            <i className="fa-solid fa-link"></i> TinyClicks
-            <Typography sx={{fontSize: "70%"}}>Dashboard</Typography>
+            <i className="fa-solid fa-link"></i> SocialClicks
+            <Typography sx={{ fontSize: "70%" }}>Dashboard</Typography>
           </div>
           {dashPages.map((panel, i) => {
             return (
               <button
                 key={`panel-${i}`}
-                className={`w-full lg:h-[50px] px-[20%] ${
-                  pathname === panel.route
+                className={`w-full lg:h-[50px] px-[20%] ${pathname === panel.route
                     ? "bg-slate-200"
                     : "hover:bg-slate-100"
-                } lg:text-left text-center flex lg:flex-row flex-col lg:gap-1 items-center justify-center h-[80px] ${panel.disabled ? 'opacity-50' : ''}`}
+                  } lg:text-left text-center flex lg:flex-row flex-col lg:gap-1 items-center justify-center h-[80px] ${panel.disabled ? 'opacity-50' : ''}`}
                 onClick={() => {
                   window.location.assign(panel.route);
                 }}

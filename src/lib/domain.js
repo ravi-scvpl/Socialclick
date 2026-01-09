@@ -1,2 +1,2 @@
 //Assigns value to environment variable prod or dev.
-export const domain = (process.env.NEXT_PUBLIC_ENVIRONMENT === "dev" ? "http://localhost:3000/" : "http://tinyclicks.co/");
+export const domain = (process.env.NEXT_PUBLIC_ENVIRONMENT === "dev" ? process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000/" : process.env.NEXT_PUBLIC_BASE_URL || "http://socialclicks.co/");
