@@ -1,0 +1,68 @@
+{
+  "name": "url-shortener",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "dev-generate": "npx prisma generate && next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-regular-svg-icons": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@mui/icons-material": "^5.15.0",
+    "@mui/joy": "^5.0.0-beta.16",
+    "@mui/material": "^5.15.0",
+    "@mui/x-date-pickers": "^6.18.7",
+    "@prisma/client": "^5.1.0",
+    "@types/mapbox-gl": "^2.7.19",
+    "base-x": "^4.0.0",
+    "bcrypt": "^5.1.1",
+    "check-password-strength": "^2.0.7",
+    "crypto": "^1.0.1",
+    "dayjs": "^1.11.10",
+    "eslint": "8.46.0",
+    "eslint-config-next": "13.4.12",
+    "express": "^4.18.2",
+    "framer-motion": "^10.15.1",
+    "fs": "^0.0.1-security",
+    "gsap": "^3.12.2",
+    "ip-geolocation-api-javascript-sdk": "^1.0.9",
+    "ipstack": "^0.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "mapbox-gl": "^3.0.0",
+    "moment-timezone": "^0.5.43",
+    "multi-range-slider-react": "^2.0.7",
+    "next": "13.4.12",
+    "react": "18.2.0",
+    "react-countup": "^6.5.0",
+    "react-dom": "18.2.0",
+    "react-draggable": "^4.4.6",
+    "react-ga": "^3.3.1",
+    "react-map-gl": "^7.1.6",
+    "react-motion": "^0.5.2",
+    "react-tooltip": "^5.25.1",
+    "react-vis": "^1.12.1",
+    "split-type": "^0.3.3",
+    "url-metadata": "^3.3.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "jest": "^29.7.0",
+    "postcss": "^8.4.27",
+    "prisma": "^5.1.0",
+    "tailwindcss": "^3.3.3"
+  },
+  "overrides": {
+    "react-vis": {
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0"
+    }
+  }
+}
