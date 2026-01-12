@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Prisma } from "../../../../prisma";
+import { Prisma } from "../../../prisma";
 import { qs } from "qs";
 import moment from "moment-timezone"; // Import moment-timezone
 
