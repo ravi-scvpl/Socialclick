@@ -401,7 +401,17 @@ export default function Links() {
                 {selectedLink !== null && (
                   <>
                     {" "}
-                    <div></div>
+                    <div className="flex justify-start p-2">
+                      <Button
+                        variant="soft"
+                        color="primary"
+                        onClick={() => {
+                          window.location.assign(`/dashboard/links/${data.data.links[selectedLink].id}`);
+                        }}
+                      >
+                        View Statistics
+                      </Button>
+                    </div>
                     <Modal open={isRenameOpen}>
                       <ModalDialog>
                         <ModalClose
