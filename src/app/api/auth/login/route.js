@@ -35,6 +35,7 @@ export async function POST(req, res) {
         id: existingUser.id,
         name: existingUser.name,
         email: existingUser.email,
+        role: existingUser.role, // Include role in JWT
       };
       const accessToken = jwt.sign(
         jwtUser,

@@ -10,6 +10,7 @@ import {
   Public,
   Link,
   ExitToApp,
+  SupervisorAccount,
 } from "@mui/icons-material";
 import Groups3Icon from "@mui/icons-material/Groups3";
 
@@ -30,6 +31,15 @@ export default function DashNav() {
     },
     { name: "My Links", route: "/dashboard/links", icon: <Link />, disabled: false, },
   ];
+
+  if (user?.role === "ADMIN") {
+    dashPages.push({
+      name: "Admin",
+      route: "/dashboard/admin",
+      icon: <SupervisorAccount />,
+      disabled: false,
+    });
+  }
 
   useEffect(() => {
     setUser(getUser());
