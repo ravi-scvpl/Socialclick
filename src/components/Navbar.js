@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Typography,
   Dropdown,
@@ -40,9 +41,7 @@ export function Navbar() {
         className="font-semibold text-[.75em] md:text-[1.2em]"
         href="/"
       >
-        <Typography>
-          <i className="fa-solid fa-link"></i> SocialClicks
-        </Typography>
+        <Image src="/images/logo.webp" alt="SocialClicks" width={150} height={50} className="object-contain" />
       </Link>
 
       <div

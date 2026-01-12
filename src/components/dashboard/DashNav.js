@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Sheet, Button, Typography, Skeleton } from "@mui/joy";
 import {
@@ -40,8 +41,8 @@ export default function DashNav() {
         className={"flex flex-col justify-between"}
       >
         <Sheet sx={{ width: "100%" }}>
-          <div className="w-full h-[80px] flex flex-col items-center justify-center">
-            <i className="fa-solid fa-link"></i> SocialClicks
+          <div className="w-full h-[80px] flex flex-col items-center justify-center pt-4">
+            <Image src="/images/logo.webp" alt="SocialClicks" width={150} height={50} className="object-contain" />
             <Typography sx={{ fontSize: "70%" }}>Dashboard</Typography>
           </div>
           {dashPages.map((panel, i) => {
@@ -49,8 +50,8 @@ export default function DashNav() {
               <button
                 key={`panel-${i}`}
                 className={`w-full lg:h-[50px] px-[20%] ${pathname === panel.route
-                    ? "bg-slate-200"
-                    : "hover:bg-slate-100"
+                  ? "bg-slate-200"
+                  : "hover:bg-slate-100"
                   } lg:text-left text-center flex lg:flex-row flex-col lg:gap-1 items-center justify-center h-[80px] ${panel.disabled ? 'opacity-50' : ''}`}
                 onClick={() => {
                   window.location.assign(panel.route);
