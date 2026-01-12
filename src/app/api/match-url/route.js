@@ -85,25 +85,24 @@ function doesExistJSON(url) {
 }
 
 // Promise wrapper for ipstack
-function getGeoInfo(ip, apiKey) {
-  const ipstack = require("ipstack");
-  return new Promise((resolve, reject) => {
-    ipstack(ip, apiKey, (err, response) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(response);
-      }
-    });
-  });
-}
-
 async function logUserInfo(ip) {
   try {
-    const userInfo = await getGeoInfo(ip, process.env.NEXT_PUBLIC_IPSTACK_API);
-    return userInfo;
+    const response = await fetch(`https://ip-api.in/api/v1/ip/${ip}`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_IPAPIIN_API}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
+    const json = await response.json();
+    return json.data; // Return the inner 'data' object which matches our schema
   } catch (error) {
     console.error("Error fetching geolocation data:", error);
+    return null;
   }
 }
 
