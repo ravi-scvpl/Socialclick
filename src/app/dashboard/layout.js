@@ -3,6 +3,7 @@ import { Inter, Poppins } from "next/font/google";
 import CookiesModal from "@/components/CookiesModal";
 
 import DashNav from "@/components/dashboard/DashNav";
+import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
@@ -35,9 +36,20 @@ export default function DashboardLayout({ children }) {
       ></script>
 
       <body className={poppins.className}>
-        <div className="flex">
-          <DashNav />
-          {children}
+        <div className="flex flex-col sm:flex-row">
+          <div className="w-full sm:hidden flex justify-center py-4 border-b bg-white">
+            <Image
+              src="/images/Indira_Gandhi_International_Airport_Dashboard.svg"
+              alt="Indira Gandhi International Airport"
+              width={200}
+              height={60}
+              className="object-contain"
+            />
+          </div>
+          <div className="flex w-full">
+            <DashNav />
+            {children}
+          </div>
         </div>
       </body>
     </html>

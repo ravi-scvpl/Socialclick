@@ -21,14 +21,9 @@ export default function DashNav() {
 
   const dashPages = [
     { name: "Overview", route: "/dashboard", icon: <Dashboard />, disabled: false },
-    { name: "Analytics", route: "/dashboard/analytics", icon: <BarChart />, disabled: true },
+
     { name: "Geography", route: "/dashboard/geography", icon: <Public />, disabled: false },
-    {
-      name: "Demographics",
-      route: "/dashboard/demographics",
-      icon: <Groups3Icon />,
-      disabled: true,
-    },
+
     { name: "My Links", route: "/dashboard/links", icon: <Link />, disabled: false, },
   ];
 
@@ -52,7 +47,7 @@ export default function DashNav() {
       >
         <Sheet sx={{ width: "100%" }}>
           <div className="w-full h-[80px] flex flex-col items-center justify-center pt-4">
-            <Image src="/images/logo.webp" alt="SocialClicks" width={150} height={50} className="object-contain" />
+            <Image src="/images/Indira_Gandhi_International_Airport_Dashboard.svg" alt="Indira Gandhi International Airport" width={200} height={60} className="object-contain" />
             <Typography sx={{ fontSize: "70%" }}>Dashboard</Typography>
           </div>
           {dashPages.map((panel, i) => {
