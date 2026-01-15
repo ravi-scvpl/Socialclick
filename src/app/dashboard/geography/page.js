@@ -60,7 +60,7 @@ export default function Geography() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON_STRINGIFY({
+        body: JSON.stringify({
           userId: assignedUser.id,
         }),
       })
