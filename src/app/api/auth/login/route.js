@@ -21,6 +21,8 @@ export async function POST(req, res) {
         salt: true,
         password: true,
         name: true,
+        email: true,
+        role: true,
       },
     });
     if (existingUser === null) {
