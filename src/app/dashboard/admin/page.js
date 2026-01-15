@@ -19,7 +19,17 @@ export default function AdminPage() {
     const [loading, setLoading] = useState(true);
     const [selectedLink, setSelectedLink] = useState(null); // For editing
     const [openEdit, setOpenEdit] = useState(false);
-    const [newClicks, setNewClicks] = useState(0);
+
+    // Traffic addition state
+    const [clicksToAdd, setClicksToAdd] = useState(0);
+    const [trafficData, setTrafficData] = useState({
+        country: "",
+        city: "",
+        browser: "",
+        device: "",
+        referrer: "",
+        date: ""
+    });
 
     useEffect(() => {
         const userData = getUser();
@@ -57,7 +67,15 @@ export default function AdminPage() {
 
     const handleEditClick = (link) => {
         setSelectedLink(link);
-        setNewClicks(link.clicks);
+        setClicksToAdd(0); // Default to 0 when opening
+        setTrafficData({
+            country: "",
+            city: "",
+            browser: "",
+            device: "",
+            referrer: "",
+            date: new Date().toISOString().slice(0, 16) // Default to now
+        });
         setOpenEdit(true);
     };
 
@@ -66,9 +84,13 @@ export default function AdminPage() {
 
         try {
             const res = await fetch(`/api/admin/links/${selectedLink.id}/stats`, {
-                method: "POST", // Using POST as per our route definition, though PATCH is semantic
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: user.id, clicks: newClicks }),
+                body: JSON.stringify({
+                    userId: user.id,
+                    clicksToAdd: clicksToAdd,
+                    trafficData: trafficData
+                }),
             });
 
             if (res.ok) {
@@ -132,23 +154,78 @@ export default function AdminPage() {
 
             <Modal open={openEdit} onClose={() => setOpenEdit(false)}>
                 <ModalDialog>
-                    <Typography level="h4">Edit Link Statistics</Typography>
+                    <Typography level="h4">Add Traffic</Typography>
                     <Typography level="body-sm" mb={2}>
                         For: {selectedLink?.shortURL}
                     </Typography>
-                    <FormControl>
-                        <FormLabel>Total Clicks</FormLabel>
-                        <Input
-                            type="number"
-                            value={newClicks}
-                            onChange={(e) => setNewClicks(e.target.value)}
-                        />
-                    </FormControl>
+                    <div className="flex flex-col gap-2 overflow-y-auto max-h-[70vh] p-1">
+                        <FormControl>
+                            <FormLabel>Clicks to Add</FormLabel>
+                            <Input
+                                type="number"
+                                value={clicksToAdd}
+                                onChange={(e) => setClicksToAdd(Number(e.target.value))}
+                                placeholder="e.g 5"
+                            />
+                        </FormControl>
+                        <div className="grid grid-cols-2 gap-2">
+                            <FormControl>
+                                <FormLabel>Country</FormLabel>
+                                <Input
+                                    placeholder="e.g United States"
+                                    value={trafficData.country}
+                                    onChange={(e) => setTrafficData({ ...trafficData, country: e.target.value })}
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>City</FormLabel>
+                                <Input
+                                    placeholder="e.g New York"
+                                    value={trafficData.city}
+                                    onChange={(e) => setTrafficData({ ...trafficData, city: e.target.value })}
+                                />
+                            </FormControl>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                            <FormControl>
+                                <FormLabel>Browser</FormLabel>
+                                <Input
+                                    placeholder="e.g Chrome"
+                                    value={trafficData.browser}
+                                    onChange={(e) => setTrafficData({ ...trafficData, browser: e.target.value })}
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Device</FormLabel>
+                                <Input
+                                    placeholder="e.g Desktop"
+                                    value={trafficData.device}
+                                    onChange={(e) => setTrafficData({ ...trafficData, device: e.target.value })}
+                                />
+                            </FormControl>
+                        </div>
+                        <FormControl>
+                            <FormLabel>Referrer URL</FormLabel>
+                            <Input
+                                placeholder="http://facebook.com"
+                                value={trafficData.referrer}
+                                onChange={(e) => setTrafficData({ ...trafficData, referrer: e.target.value })}
+                            />
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel>Date</FormLabel>
+                            <Input
+                                type="datetime-local"
+                                value={trafficData.date}
+                                onChange={(e) => setTrafficData({ ...trafficData, date: e.target.value })}
+                            />
+                        </FormControl>
+                    </div>
                     <div className="flex justify-end gap-2 mt-4">
                         <Button variant="plain" color="neutral" onClick={() => setOpenEdit(false)}>
                             Cancel
                         </Button>
-                        <Button onClick={handleSaveStats}>Save Changes</Button>
+                        <Button onClick={handleSaveStats}>Add Traffic</Button>
                     </div>
                 </ModalDialog>
             </Modal>
