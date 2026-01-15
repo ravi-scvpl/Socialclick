@@ -3,14 +3,13 @@ import React from "react";
 
 import { Table, Sheet, Typography, Skeleton } from "@mui/joy";
 
-import mapboxgl from "mapbox-gl";
 import Link from "next/link";
 import { CircularProgress } from "@mui/joy";
 import Tooltip from "@mui/joy/Tooltip";
 
 import { getUser } from "@/lib/authHandlers";
 import { useState, useEffect } from "react";
-import { DASHBOARD_FETCH_INTERVAL, MAPBOX_API_KEY } from "@/lib/constants";
+import { DASHBOARD_FETCH_INTERVAL } from "@/lib/constants";
 
 //Date Imports
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -24,6 +23,9 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { ArrowDropUp, Close } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
+
+import { WorldMap } from "react-svg-worldmap";
+
 export default function Geography() {
   const [data, setData] = useState(null);
   const [isEmptyData, setIsEmptyData] = useState(null);
@@ -40,8 +42,6 @@ export default function Geography() {
   // Widget States
   const [topLocationsWidgetOpen, setTopLocationsWidgetOpen] = useState(true);
   const [timeframeWidgetOpen, setTimeframeWidgetOpen] = useState(true);
-
-  mapboxgl.accessToken = MAPBOX_API_KEY; //Mabox Setup Token
 
   async function assignUser() {
     const userData = getUser(); // Fetch user data
@@ -60,7 +60,7 @@ export default function Geography() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
+        body: JSON_STRINGIFY({
           userId: assignedUser.id,
         }),
       })
@@ -127,6 +127,44 @@ export default function Geography() {
     return `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
   }
 
+  // Process data for the map
+  const getCountryData = (records) => {
+    // Filter records based on date range first
+    var isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
+    var isSameOrBefore = require("dayjs/plugin/isSameOrBefore");
+    dayjs.extend(isSameOrAfter);
+    dayjs.extend(isSameOrBefore);
+
+    const filteredRecords = records.filter((record) => {
+      const recordDate = dayjs(record.createdAt);
+      const startDate = dayjs(dateRange[0]);
+      const endDate = dayjs(dateRange[1]);
+      return (
+        recordDate.isSameOrAfter(startDate) &&
+        recordDate.isSameOrBefore(endDate)
+      );
+    });
+
+    const countryCounts = filteredRecords.reduce((acc, record) => {
+      // Assuming record.location.countryCode contains the ISO code (e.g., "US", "IN")
+      // If not available, use "UNKNOWN" or handle as needed
+      // Some APIs return 'country_code' or 'countryCode'
+      const country = record.location.countryCode || record.location.country_code || "UNKNOWN";
+      if (country === "UNKNOWN") return acc;
+
+      const found = acc.find(item => item.country === country);
+      if (found) {
+        found.value += 1;
+      } else {
+        acc.push({ country: country, value: 1 });
+      }
+      return acc;
+    }, []);
+
+    return countryCounts;
+  };
+
+
   return (
     <main className="h-screen overflow-x-hidden w-full">
       {!data && (
@@ -136,7 +174,7 @@ export default function Geography() {
       )}
       {data && (
         <>
-          <section className="h-full relative">
+          <section className="h-full relative flex flex-col items-center">
             {isEmptyData && <h4>No data to display</h4>}
 
             {!isEmptyData && (
@@ -153,6 +191,7 @@ export default function Geography() {
                     borderRadius: 4,
                     opacity: 0.75,
                     boxShadow: "black 2px 2px 12px",
+                    zIndex: 10
                   }}
                 >
                   <table className="w-full fade-in">
@@ -192,7 +231,7 @@ export default function Geography() {
                     </tbody>
                   </table>
                 </Sheet>
-                <div className="absolute m-4 fade-in">
+                <div className="absolute m-4 fade-in z-10 left-0 top-0">
                   <div className="flex flex-col gap-4">
                     {timeframeWidgetOpen && (
                       <Sheet
@@ -250,29 +289,22 @@ export default function Geography() {
                             <span className="drop-shadow text-[1.5em]">🇺🇸</span>
                           </Tooltip>
                         </div>
-                        <div>City: {data.topCities[0].city}</div> {/*TODO: Calculate top city from dateRange*/}
-                        
+                        <div>City: {data.topCities[0]?.city || "N/A"}</div> {/*TODO: Calculate top city from dateRange*/}
+
                       </Sheet>
                     )}
                   </div>
                 </div>
 
-                <Map
-                  records={data.data.filter((record) => {
-                    var isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
-                    var isSameOrBefore = require("dayjs/plugin/isSameOrBefore");
-                    dayjs.extend(isSameOrAfter);
-                    dayjs.extend(isSameOrBefore);
-                    const recordDate = dayjs(record.createdAt); // assuming record.createdAt is the date you want to compare
-                    const startDate = dayjs(dateRange[0]);
-                    const endDate = dayjs(dateRange[1]);
-                    return (
-                      recordDate.isSameOrAfter(startDate) &&
-                      recordDate.isSameOrBefore(endDate)
-                    );
-                  })}
-                  dateRange={dateRange}
-                ></Map>
+                <div className="w-full h-full flex items-center justify-center">
+                  <WorldMap
+                    color="red"
+                    title="Traffic by Country"
+                    value-suffix="clicks"
+                    size="xxl"
+                    data={getCountryData(data.data)}
+                  />
+                </div>
               </>
             )}
           </section>
@@ -281,78 +313,3 @@ export default function Geography() {
     </main>
   );
 }
-
-const Map = ({ records, dateRange }) => {
-  const [mapCenter, setMapCenter] = useState([-74.5, 40]); // Default center
-  const [mapZoom, setMapZoom] = useState(9); // Default zoom
-
-  const coordinates = [];
-  records.map((record) => {
-    coordinates.push({
-      lng: record.location.longitude,
-      lat: record.location.latitude,
-    });
-  });
-  console.log(coordinates);
-  useEffect(() => {
-    const map = new mapboxgl.Map({
-      container: "map", // container ID
-      style: "mapbox://styles/mapbox/dark-v11", // style URL
-      center: [-74.5, 40],
-      zoom: 9,
-      attributionControl: false,
-    });
-    
-    map.on('move', () => {
-      setMapCenter([map.getCenter().lng, map.getCenter().lat]);
-      setMapZoom(map.getZoom());
-    });
-    
-    // Add your heatmap layer here
-    map.on("load", function () {
-      map.addSource("points", {
-        type: "geojson",
-        data: {
-          type: "FeatureCollection",
-          features: coordinates.map((coord) => ({
-            type: "Feature",
-            properties: {},
-            geometry: {
-              type: "Point",
-              coordinates: [coord.lng, coord.lat],
-            },
-          })),
-        },
-      });
-
-      map.addLayer({
-        id: "heatmap",
-        type: "heatmap",
-        source: "points",
-        maxzoom: 15,
-        paint: {
-          "heatmap-radius": {
-            stops: [
-              [0, 2],
-              [5, 20],
-            ],
-          },
-        },
-      });
-    });
-    return () => map.remove();
-  }, [dateRange]);
-
-  return (
-    <div
-      style={{ height: "100%", width: "100%" }}
-      className="flex justify-center "
-    >
-      <div
-        id="map"
-        style={{ height: "100%", width: "100%" }}
-        className="overflow-hidden w-[90%]"
-      />
-    </div>
-  );
-};

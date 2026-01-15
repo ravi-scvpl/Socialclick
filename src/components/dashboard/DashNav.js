@@ -47,7 +47,7 @@ export default function DashNav() {
       >
         <Sheet sx={{ width: "100%" }}>
           <div className="w-full h-[80px] flex flex-col items-center justify-center pt-4">
-            <Image src="/images/Indira_Gandhi_International_Airport_Dashboard.svg" alt="Indira Gandhi International Airport" width={200} height={60} className="object-contain" />
+            <Image src="/images/Indira_Gandhi_International_Airport_Dashboard.png" alt="Indira Gandhi International Airport" width={200} height={60} className="object-contain" />
             <Typography sx={{ fontSize: "70%" }}>Dashboard</Typography>
           </div>
           {dashPages.map((panel, i) => {

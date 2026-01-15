@@ -622,15 +622,6 @@ export default function Links() {
             )}
           </Sheet>
         </div>
-        <div>
-          <div>To Do:</div>
-          <ul>
-            <li>Today&apos;s Top Performer</li>
-            <li>Link Creation Here</li>
-            <li>Bulk Link Creation</li>
-            <li>Password Protection</li>
-          </ul>
-        </div>
       </main>
     );
 
