@@ -39,7 +39,7 @@ export default function DashboardLayout({ children }) {
         <div className="flex flex-col sm:flex-row">
           <div className="w-full sm:hidden flex justify-center py-4 border-b bg-white">
             <Image
-              src="/images/Indira_Gandhi_International_Airport_Dashboard.svg"
+              src="/images/Indira_Gandhi_International_Airport_Dashboard.png"
               alt="Indira Gandhi International Airport"
               width={200}
               height={60}

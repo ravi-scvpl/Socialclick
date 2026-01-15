@@ -30,6 +30,7 @@ export default function AdminPage() {
         referrer: "",
         date: ""
     });
+    const [isAdding, setIsAdding] = useState(false);
 
     useEffect(() => {
         const userData = getUser();
@@ -81,7 +82,7 @@ export default function AdminPage() {
 
     const handleSaveStats = async () => {
         if (!selectedLink) return;
-
+        setIsAdding(true);
         try {
             const res = await fetch(`/api/admin/links/${selectedLink.id}/stats`, {
                 method: "POST",
@@ -103,6 +104,8 @@ export default function AdminPage() {
         } catch (error) {
             console.error("Error updating stats:", error);
             alert("Error updating stats");
+        } finally {
+            setIsAdding(false);
         }
     };
 
@@ -225,7 +228,9 @@ export default function AdminPage() {
                         <Button variant="plain" color="neutral" onClick={() => setOpenEdit(false)}>
                             Cancel
                         </Button>
-                        <Button onClick={handleSaveStats}>Add Traffic</Button>
+                        <Button onClick={handleSaveStats} loading={isAdding} disabled={isAdding}>
+                            {isAdding ? "Processing..." : "Add Traffic"}
+                        </Button>
                     </div>
                 </ModalDialog>
             </Modal>
