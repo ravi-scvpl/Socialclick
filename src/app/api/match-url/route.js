@@ -13,9 +13,10 @@ export async function GET(request) {
 
   const urlRecord = await Prisma.Link.findFirst({
     where: {
-      shortURL: {
-        endsWith: "/" + slug,
-      },
+      OR: [
+        { shortURL: { endsWith: "/" + slug } },
+        { shortURL: { endsWith: slug } },
+      ],
     },
     select: {
       originalURL: true,

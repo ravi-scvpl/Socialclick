@@ -44,47 +44,49 @@ async function getTopPerformers(userId) {
 }
 
 async function getDailyClicks(userId, timeZone) {
-  const dailyClicks = await Prisma.DailyClicks.findMany({
-    where: {
-      userId: userId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: 6,
-  });
   const moment = require("moment-timezone");
 
-  const midnightUserTime = moment().tz(timeZone).startOf("day");
-  const midnightUTC = midnightUserTime.clone().tz("UTC").format();
-  const UsersTraffic = await Prisma.User.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      links: {
-        select: {
-          id: true, // Include other Link fields as needed
-          traffic: {
-            select: {
-              id: true, // Include other Traffic fields as needed
-              createdAt: true,
-            },
-            where: {
-              createdAt: {
-                gte: midnightUTC,
-              },
-            },
-          },
+  // Fetch link IDs for the user
+  const userLinks = await Prisma.Link.findMany({
+    where: { userId: userId },
+    select: { id: true },
+  });
+  const linkIds = userLinks.map((link) => link.id);
+
+  // Aggregate Traffic for the last 7 days
+  const dailyClicks = [];
+  for (let i = 6; i >= 1; i--) {
+    const startOfDay = moment().tz(timeZone).subtract(i, "days").startOf("day");
+    const endOfDay = moment(startOfDay).endOf("day");
+
+    const count = await Prisma.Traffic.count({
+      where: {
+        linkId: { in: linkIds },
+        createdAt: {
+          gte: startOfDay.toDate(),
+          lte: endOfDay.toDate(),
         },
+      },
+    });
+
+    dailyClicks.push({
+      createdAt: startOfDay.toISOString(),
+      clicks: count,
+    });
+  }
+
+  // Today's clicks
+  const startOfToday = moment().tz(timeZone).startOf("day");
+  const todaysClicks = await Prisma.Traffic.count({
+    where: {
+      linkId: { in: linkIds },
+      createdAt: {
+        gte: startOfToday.toDate(),
       },
     },
   });
-  let todaysClicks = 0;
-  if (UsersTraffic) {
-    UsersTraffic.links.forEach((link) => {
-      todaysClicks += link.traffic.length;
-    });
-  }
+
+  // The weekly chart logic expects dailyClicks to be the historical data
   return { dailyClicks, todaysClicks };
 }
 
