@@ -15,10 +15,10 @@ export const AdBanner = (props) => {
       <ins
         class="adsbygoogle"
         style={{
-            display: 'block',
-            overflow: 'hidden',
+          display: 'block',
+          overflow: 'hidden',
         }}
-        data-ad-client={`ca-pub-${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
+        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_ID?.startsWith("ca-pub-") ? process.env.NEXT_PUBLIC_ADSENSE_ID : `ca-pub-${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
         {...props}
         data-ad-slot="1800190570"
         data-ad-format="auto"

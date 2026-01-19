@@ -4,8 +4,8 @@ import { ENVIRONMENT } from "@/lib/constants";
 import { validAlias } from "@/lib/shorten";
 export async function POST(request) {
   const body = await request.json(); // parse the request body
-  const devDomain = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000/";
-  const prodDomain = process.env.NEXT_PUBLIC_BASE_URL || "http://socialclicks.co/";
+  const devDomain = (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000/").replace(/\/?$/, '/');
+  const prodDomain = (process.env.NEXT_PUBLIC_BASE_URL || "http://socialclicks.co/").replace(/\/?$/, '/');
   let s = body.shortURL;
   const name = body.name || null;
   const alias = body.alias || null;
