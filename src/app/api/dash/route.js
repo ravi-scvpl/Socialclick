@@ -70,7 +70,7 @@ async function getTopCity(records) {
 
   // Count each city
   data.forEach((item) => {
-    let city = item.location.city;
+    let city = item.location?.city || "Unknown";
     cityCounts.set(city, (cityCounts.get(city) || 0) + 1);
   });
 

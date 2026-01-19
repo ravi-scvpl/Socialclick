@@ -60,6 +60,41 @@ export async function POST(request, { params }) {
             data: { clicks: { increment: count } },
         });
 
+        // 4. Update DailyClicks for the specified date to reflect in charts
+        // The dashboard chart uses DailyClicks.
+        const targetDate = trafficData?.date ? new Date(trafficData.date) : new Date();
+        const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0));
+
+        // Use the owner's userId for DailyClicks, not the admin's!
+        const linkOwnerId = updatedLink.userId;
+        if (linkOwnerId) {
+            await Prisma.DailyClicks.upsert({
+                where: {
+                    // We need a unique constraint or just find and update.
+                    // Actually DailyClicks doesn't seem to have a unique constraint on (userId, createdAt).
+                    // Looking at schema: id is ObjectId.
+                    // Let's find if one exists for this day and user.
+                    id: (await Prisma.DailyClicks.findFirst({
+                        where: {
+                            userId: linkOwnerId,
+                            createdAt: {
+                                gte: startOfDay,
+                                lt: new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000)
+                            }
+                        }
+                    }))?.id || "000000000000000000000000" // Dummy ID for upsert if not found
+                },
+                update: {
+                    clicks: { increment: count }
+                },
+                create: {
+                    userId: linkOwnerId,
+                    clicks: count,
+                    createdAt: startOfDay
+                }
+            });
+        }
+
         return new NextResponse(JSON.stringify({ data: updatedLink, message: "SUCCESS" }), {
             status: 200,
         });

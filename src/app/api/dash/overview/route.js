@@ -57,10 +57,10 @@ async function getDailyClicks(userId, timeZone) {
 
   const midnightUserTime = moment().tz(timeZone).startOf("day");
   const midnightUTC = midnightUserTime.clone().tz("UTC").format();
-  const UsersTraffic = await Prisma.User.findMany({
+  const UsersTraffic = await Prisma.User.findUnique({
+    where: { id: userId },
     select: {
-      id: true, // Include other User fields as needed
-      name: true,
+      id: true,
       links: {
         select: {
           id: true, // Include other Link fields as needed
@@ -80,11 +80,11 @@ async function getDailyClicks(userId, timeZone) {
     },
   });
   let todaysClicks = 0;
-  UsersTraffic.map((user) => {
-    user.links.map((link) => {
+  if (UsersTraffic) {
+    UsersTraffic.links.forEach((link) => {
       todaysClicks += link.traffic.length;
     });
-  });
+  }
   return { dailyClicks, todaysClicks };
 }
 
@@ -94,21 +94,21 @@ function getWeeklyClicks(dailyClicks) {
   let weeklyClicksSummary = [];
 
   for (let i = 0; i < 5; i++) {
-      const startOfWeek = moment().subtract(i, 'weeks').startOf('week');
-      const endOfWeek = moment(startOfWeek).endOf('week');
-      let totalClicks = 0;
+    const startOfWeek = moment().subtract(i, 'weeks').startOf('week');
+    const endOfWeek = moment(startOfWeek).endOf('week');
+    let totalClicks = 0;
 
-      dailyClicks.forEach(click => {
-          const clickDate = moment(click.createdAt); // Assuming 'createdAt' is the date field
-          if (clickDate.isSameOrAfter(startOfWeek) && clickDate.isSameOrBefore(endOfWeek)) {
-              totalClicks += click.clicks; // Assuming 'clicks' is the field for number of clicks
-          }
-      });
+    dailyClicks.forEach(click => {
+      const clickDate = moment(click.createdAt); // Assuming 'createdAt' is the date field
+      if (clickDate.isSameOrAfter(startOfWeek) && clickDate.isSameOrBefore(endOfWeek)) {
+        totalClicks += click.clicks; // Assuming 'clicks' is the field for number of clicks
+      }
+    });
 
-      // Using UTC Zulu time format for createdAt
-      const createdAt = startOfWeek.utc().format();
+    // Using UTC Zulu time format for createdAt
+    const createdAt = startOfWeek.utc().format();
 
-      weeklyClicksSummary.push({ createdAt: createdAt, clicks: totalClicks });
+    weeklyClicksSummary.push({ createdAt: createdAt, clicks: totalClicks });
   }
 
   return weeklyClicksSummary;
@@ -173,10 +173,18 @@ async function getDeviceAndBrowser(userId) {
 }
 
 //Update for to only include traffic from links made by current user
-async function getReferrers() {
-  const urlMetadata = require("url-metadata");
+async function getReferrers(userId) {
+  // Fetch link IDs for the user
+  const userLinks = await Prisma.Link.findMany({
+    where: { userId: userId },
+    select: { id: true },
+  });
+  const linkIds = userLinks.map((link) => link.id);
 
   const referrers = await Prisma.Traffic.findMany({
+    where: {
+      linkId: { in: linkIds },
+    },
     select: {
       source: true,
     },
@@ -188,12 +196,12 @@ async function getReferrers() {
     if (!referrer || !referrer.source) {
       continue;
     }
-    if (referrer) {
+    if (referrer && referrer.source) {
       const selectedData = {
-        title: referrer.source.title,
-        sitename: referrer.source.sitename,
-        description: referrer.source.description,
-        images: referrer.source.images,
+        title: referrer.source.title || "Unknown",
+        sitename: referrer.source.sitename || "Unknown",
+        description: referrer.source.description || "",
+        images: referrer.source.images || [],
       };
 
       let existingEntry = allReferrers.find(
