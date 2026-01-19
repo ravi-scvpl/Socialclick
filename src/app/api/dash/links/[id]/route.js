@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "../../../prisma";
-import moment from "moment-timezone"; // Import moment-timezone
 
 export async function POST(request, { params }) {
     const { id } = params; // Get link ID from dynamic route params
@@ -106,6 +105,7 @@ export async function POST(request, { params }) {
 // Helpers
 
 function getWeeklyClicks(traffic, timeZone) {
+    const moment = require("moment-timezone");
     // Last 5 weeks
     let weeklyClicksSummary = [];
     for (let i = 0; i < 5; i++) {
@@ -123,6 +123,7 @@ function getWeeklyClicks(traffic, timeZone) {
 }
 
 function getDailyClicks(traffic, timeZone) {
+    const moment = require("moment-timezone");
     // Last 30 days
     let dailySummary = [];
     for (let i = 0; i < 30; i++) { // 30 days history

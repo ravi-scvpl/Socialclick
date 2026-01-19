@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "../../prisma";
 import { domain } from "@/lib/domain";
-import qs from "qs";
 import { create } from "@mui/material/styles/createTransitions";
 
 export async function POST(request) {

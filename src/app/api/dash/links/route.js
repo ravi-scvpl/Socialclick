@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "../../prisma";
 import { domain } from "@/lib/domain";
-import qs from "qs";
 
 export async function POST(request) {
   const { userId, timeZone } = await request.json();
@@ -17,7 +16,7 @@ export async function POST(request) {
 
   console.log(await TopPerformingToday(userId, timeZone))
   return new NextResponse(
-    JSON.stringify({ data: {links: await URLS, collections: await getCollections(userId)}, message: "MATCH FOUND" }),
+    JSON.stringify({ data: { links: await URLS, collections: await getCollections(userId) }, message: "MATCH FOUND" }),
     {
       status: 200,
     }
@@ -30,14 +29,14 @@ async function getCollections(userId) {
       userId: userId
     },
     select: {
-      id: true,          
+      id: true,
       name: true,
       createdAt: true,
       links: {
         select: {
           link: {
             select: {
-              id: true,      
+              id: true,
               name: true,
               originalURL: true,
               shortURL: true
@@ -59,10 +58,11 @@ async function TopPerformingToday(userId, timeZone) {
 
   const midnightUserTime = moment().tz(timeZone);
   const midnightUTC = midnightUserTime.clone().tz("UTC").format();
-  
-  const TodaysTraffic = await Prisma.User.findMany({
+
+  const TodaysTraffic = await Prisma.User.findUnique({
+    where: { id: userId },
     select: {
-      id: true, // Include other User fields as needed
+      id: true,
       name: true,
       links: {
         select: {
@@ -84,17 +84,17 @@ async function TopPerformingToday(userId, timeZone) {
       },
     },
   });
-  
+
   // Aggregating shortURL occurrences
   const shortURLCounts = {};
-  TodaysTraffic.forEach(user => {
-    user.links.forEach(link => {
+  if (TodaysTraffic) {
+    TodaysTraffic.links.forEach((link) => {
       link.traffic.forEach(() => {
         shortURLCounts[link.shortURL] = (shortURLCounts[link.shortURL] || 0) + 1;
       });
     });
-  });
-  
+  }
+
   // Finding the shortURL with the most occurrences
   let maxCount = 0;
   let mostFrequentShortURL = null;
@@ -104,7 +104,7 @@ async function TopPerformingToday(userId, timeZone) {
       mostFrequentShortURL = shortURL;
     }
   }
-  
+
   console.log("Most frequent shortURL:", mostFrequentShortURL, "with", maxCount, "occurrences");
-  
+
 }
