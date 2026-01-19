@@ -2,11 +2,13 @@
 
 import { Sheet, Typography, Button, Table } from "@mui/joy";
 import Link from "next/link";
+import Image from "next/image";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import MouseTwoTone from "@mui/icons-material/MouseTwoTone";
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import DevicesIcon from "@mui/icons-material/Devices";
 import PublicIcon from '@mui/icons-material/Public';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 export default function GMRDashboard() {
     // Static Data
@@ -19,18 +21,21 @@ export default function GMRDashboard() {
 
     const gmrLinks = [
         {
+            id: "google",
             name: "GMR GOOGLE LINK CLICK",
             destination: "https://google.com",
             clicks: 5421,
             status: "Active"
         },
         {
+            id: "fb",
             name: "GMR FB LINK CLICK",
             destination: "https://facebook.com",
             clicks: 4102,
             status: "Active"
         },
         {
+            id: "display",
             name: "GMR DISPLAY CLICK",
             destination: "http://worldairportsurvey.com/surveys/airport/best_airport.html",
             clicks: 3020,
@@ -41,7 +46,16 @@ export default function GMRDashboard() {
     return (
         <main className="w-full h-full flex flex-col gap-8 max-h-screen overflow-y-auto p-4 bg-gray-50">
             {/* Header Section */}
-            <div className="h-[100px] flex gap-2 items-center">
+            <div className="h-[120px] flex gap-4 items-center border-b pb-4">
+                <div className="bg-white p-2 rounded-lg shadow-sm">
+                    <Image
+                        src="/images/Indira_Gandhi_International_Airport_Dashboard.png"
+                        alt="Indira Gandhi International Airport"
+                        width={200}
+                        height={80}
+                        style={{ objectFit: "contain" }}
+                    />
+                </div>
                 <div>
                     <Typography sx={{ fontWeight: 700 }} className={"text-[2.5em] text-gray-800"}>
                         GMR Analytics
@@ -124,7 +138,7 @@ export default function GMRDashboard() {
                                 <th>Destination URL</th>
                                 <th>Clicks</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -145,16 +159,28 @@ export default function GMRDashboard() {
                                         </span>
                                     </td>
                                     <td>
-                                        <Button
-                                            component="a"
-                                            href={link.destination}
-                                            target="_blank"
-                                            size="sm"
-                                            variant="soft"
-                                            color="primary"
-                                        >
-                                            Visit
-                                        </Button>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                component={Link}
+                                                href={`/gmr/${link.id}`}
+                                                size="sm"
+                                                variant="outlined"
+                                                color="neutral"
+                                                startDecorator={<BarChartIcon />}
+                                            >
+                                                Stats
+                                            </Button>
+                                            <Button
+                                                component="a"
+                                                href={link.destination}
+                                                target="_blank"
+                                                size="sm"
+                                                variant="soft"
+                                                color="primary"
+                                            >
+                                                Visit
+                                            </Button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
