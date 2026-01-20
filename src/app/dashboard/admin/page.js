@@ -410,6 +410,7 @@ export default function AdminPage() {
                             </div>
                         </Sheet>
 
+                        {/* 
                         <div className="flex justify-between items-center mt-4">
                             <div>
                                 <Typography level="h4">Raw Configuration</Typography>
@@ -418,24 +419,8 @@ export default function AdminPage() {
                             <Button onClick={handleSaveGmr} loading={savingGmr} color="primary">
                                 Save Full JSON
                             </Button>
-                        </div>
-
-                        {loadingGmr ? (
-                            <div>Loading JSON...</div>
-                        ) : (
-                            <Textarea
-                                minRows={20}
-                                maxRows={30}
-                                value={gmrJson}
-                                onChange={(e) => setGmrJson(e.target.value)}
-                                sx={{
-                                    fontFamily: 'monospace',
-                                    fontSize: '14px',
-                                    padding: '1rem',
-                                    borderRadius: 'md'
-                                }}
-                            />
-                        )}
+                        </div> 
+                        */}
                     </div>
                 </TabPanel>
             </Tabs>
