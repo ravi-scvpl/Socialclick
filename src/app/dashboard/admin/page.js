@@ -42,6 +42,80 @@ export default function AdminPage() {
     const [loadingGmr, setLoadingGmr] = useState(false);
     const [savingGmr, setSavingGmr] = useState(false);
 
+    // Daily Log State
+    const [logEntry, setLogEntry] = useState({
+        linkId: "google",
+        date: new Date().toISOString().slice(0, 10),
+        clicks: 0
+    });
+
+    const handleAddDailyLog = async () => {
+        if (!gmrJson) return;
+        try {
+            let data = JSON.parse(gmrJson);
+            const { linkId, date, clicks } = logEntry;
+
+            if (!data.linkData[linkId]) {
+                alert("Link ID not found in JSON data");
+                return;
+            }
+
+            // 1. Update Graph Points
+            let points = data.linkData[linkId].graphPoints || [];
+            const existingIndex = points.findIndex(p => p.x === date);
+
+            if (existingIndex > -1) {
+                // Update existing date
+                points[existingIndex].y = clicks;
+            } else {
+                // Add new date
+                points.push({ x: date, y: clicks });
+                // Sort by date logic (simple string sort for YYYY-MM-DD works)
+                points.sort((a, b) => a.x.localeCompare(b.x));
+            }
+            data.linkData[linkId].graphPoints = points;
+
+            // 2. Update Total Clicks (Sum of all graph points)
+            const newTotal = points.reduce((sum, p) => sum + p.y, 0);
+            data.linkData[linkId].metrics.totalClicks = newTotal;
+
+            // 3. Update Main Table Clicks
+            const linkIndex = data.gmrLinks.findIndex(l => l.id === linkId);
+            if (linkIndex > -1) {
+                data.gmrLinks[linkIndex].clicks = newTotal;
+            }
+
+            // 4. Update Static Stats Total (Sum of all links)
+            let allLinksTotal = 0;
+            data.gmrLinks.forEach(l => allLinksTotal += l.clicks);
+            data.staticStats.totalClicks = allLinksTotal;
+
+            // Update State & Save
+            const newJson = JSON.stringify(data, null, 2);
+            setGmrJson(newJson);
+
+            // Trigger Save API
+            setSavingGmr(true);
+            const res = await fetch("/api/gmr", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data: data })
+            });
+            const result = await res.json();
+            if (result.success) {
+                alert(`Log Added! Total Updated to ${newTotal}`);
+            } else {
+                alert("Failed to save log: " + result.message);
+            }
+
+        } catch (error) {
+            console.error("Error adding log:", error);
+            alert("Error processing JSON data");
+        } finally {
+            setSavingGmr(false);
+        }
+    };
+
     useEffect(() => {
         const userData = getUser();
         if (!userData) {
@@ -222,13 +296,50 @@ export default function AdminPage() {
 
                 <TabPanel value={1} sx={{ p: 2 }}>
                     <div className="flex flex-col gap-4 max-w-4xl">
-                        <div className="flex justify-between items-center">
+
+                        {/* Daily Entry Form */}
+                        <Sheet variant="outlined" sx={{ p: 3, borderRadius: 'md', bgcolor: 'background.level1' }}>
+                            <Typography level="h4" mb={2}>Add Daily Log</Typography>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                                <FormControl>
+                                    <FormLabel>Link</FormLabel>
+                                    <select
+                                        className="p-2 rounded-md border border-gray-300"
+                                        value={logEntry.linkId}
+                                        onChange={(e) => setLogEntry({ ...logEntry, linkId: e.target.value })}
+                                    >
+                                        <option value="google">Google Link</option>
+                                        <option value="fb">Facebook Link</option>
+                                        <option value="display">Display Link</option>
+                                    </select>
+                                </FormControl>
+                                <FormControl>
+                                    <FormLabel>Date</FormLabel>
+                                    <Input
+                                        type="date"
+                                        value={logEntry.date}
+                                        onChange={(e) => setLogEntry({ ...logEntry, date: e.target.value })}
+                                    />
+                                </FormControl>
+                                <FormControl>
+                                    <FormLabel>Clicks</FormLabel>
+                                    <Input
+                                        type="number"
+                                        value={logEntry.clicks}
+                                        onChange={(e) => setLogEntry({ ...logEntry, clicks: Number(e.target.value) })}
+                                    />
+                                </FormControl>
+                                <Button onClick={handleAddDailyLog} color="success">Add Log</Button>
+                            </div>
+                        </Sheet>
+
+                        <div className="flex justify-between items-center mt-4">
                             <div>
-                                <Typography level="h4">GMR Dynamic Config</Typography>
-                                <Typography level="body-sm">Edit the JSON below to update stats, graphs, and Top 10 lists instantly.</Typography>
+                                <Typography level="h4">Raw Configuration</Typography>
+                                <Typography level="body-sm">Advanced: Edit JSON directly.</Typography>
                             </div>
                             <Button onClick={handleSaveGmr} loading={savingGmr} color="primary">
-                                Save GMR Data
+                                Save Full JSON
                             </Button>
                         </div>
 

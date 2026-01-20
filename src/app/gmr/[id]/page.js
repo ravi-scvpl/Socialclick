@@ -124,19 +124,27 @@ export default function GMRLinkStats({ params }) {
                 <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white' }} className="min-h-[400px]">
                     <Typography level="h4" mb={2}>Click Performance (Last 7 Days)</Typography>
                     <div className="h-[300px] flex items-end justify-between gap-2 px-4 pb-4 border-b">
-                        {data.graphPoints.map((point, i) => (
-                            <div key={i} className="flex flex-col items-center gap-2 w-full">
-                                <div
-                                    className="w-full bg-blue-500 rounded-t-md hover:bg-blue-600 transition-all cursor-pointer relative group"
-                                    style={{ height: `${(point.y / 1500) * 100}%` }}
-                                >
-                                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                        {point.y}
-                                    </span>
+                        {data.graphPoints.map((point, i) => {
+                            const formatDate = (dateStr) => {
+                                const date = new Date(dateStr);
+                                if (isNaN(date.getTime())) return dateStr;
+                                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                            };
+
+                            return (
+                                <div key={i} className="flex flex-col items-center gap-2 w-full">
+                                    <div
+                                        className="w-full bg-blue-500 rounded-t-md hover:bg-blue-600 transition-all cursor-pointer relative group"
+                                        style={{ height: `${(point.y / 1500) * 100}%` }}
+                                    >
+                                        <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                            {point.y}
+                                        </span>
+                                    </div>
+                                    <span className="text-xs text-gray-500 font-bold whitespace-nowrap">{formatDate(point.x)}</span>
                                 </div>
-                                <span className="text-xs text-gray-500 font-bold">{point.x}</span>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </Sheet>
 
