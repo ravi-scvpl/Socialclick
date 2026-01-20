@@ -49,7 +49,18 @@ export default function GMRLinkStats({ params }) {
     // Filter Logic
     const getFilteredPoints = () => {
         if (!data || !data.graphPoints) return [];
-        const points = [...data.graphPoints];
+        let points = [...data.graphPoints];
+
+        // Sort points to ensure Dates appear after "Mon", "Tue" etc strings, and are chronological
+        points.sort((a, b) => {
+            const isDateA = /^\d{4}-\d{2}-\d{2}/.test(a.x);
+            const isDateB = /^\d{4}-\d{2}-\d{2}/.test(b.x);
+
+            if (isDateA && !isDateB) return 1; // Dates come after non-dates
+            if (!isDateA && isDateB) return -1;
+            if (isDateA && isDateB) return a.x.localeCompare(b.x); // Chronological for dates
+            return 0; // Keep original order for non-dates
+        });
 
         // Assuming points are sorted by date or date string ISO
         if (timeRange === "24H") return points.slice(-1); // Or last 24h logic if granular
