@@ -410,6 +410,62 @@ export default function AdminPage() {
                             </div>
                         </Sheet>
 
+                        {/* 2. Top 10 Lists Editor (New) */}
+                        <Sheet variant="outlined" sx={{ p: 3, borderRadius: 'md' }}>
+                            <div className="flex justify-between items-center mb-4">
+                                <div>
+                                    <Typography level="h4">Top 10 Lists Editor</Typography>
+                                    <Typography level="body-sm">Manage the top metrics displayed on the detail page.</Typography>
+                                </div>
+                                <div className="flex gap-2">
+                                    <select
+                                        className="p-2 rounded-md border border-gray-300"
+                                        value={logEntry.linkId} // Reuse selection for list editing
+                                        onChange={(e) => setLogEntry({ ...logEntry, linkId: e.target.value })}
+                                    >
+                                        <option value="google">Google Link</option>
+                                        <option value="fb">Facebook Link</option>
+                                        <option value="display">Display Link</option>
+                                    </select>
+                                    <Button onClick={() => fetchGmrData()} variant="soft">Refresh Data</Button>
+                                </div>
+                            </div>
+
+                            {/* List Editors Grid */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <ListEditor
+                                    title="Browsers"
+                                    data={JSON.parse(gmrJson || "{}")?.linkData?.[logEntry.linkId]?.browsers || []}
+                                    onSave={(newList) => updateList(logEntry.linkId, "browsers", newList)}
+                                />
+                                <ListEditor
+                                    title="Cities"
+                                    data={JSON.parse(gmrJson || "{}")?.linkData?.[logEntry.linkId]?.cities || []}
+                                    onSave={(newList) => updateList(logEntry.linkId, "cities", newList)}
+                                />
+                                <ListEditor
+                                    title="Countries"
+                                    data={JSON.parse(gmrJson || "{}")?.linkData?.[logEntry.linkId]?.countries || []}
+                                    onSave={(newList) => updateList(logEntry.linkId, "countries", newList)}
+                                />
+                                <ListEditor
+                                    title="OS"
+                                    data={JSON.parse(gmrJson || "{}")?.linkData?.[logEntry.linkId]?.os || []}
+                                    onSave={(newList) => updateList(logEntry.linkId, "os", newList)}
+                                />
+                            </div>
+                        </Sheet>
+
+                        <div className="flex justify-between items-center mt-8 pt-4 border-t">
+                            <div>
+                                <Typography level="h4">Save All Changes</Typography>
+                                <Typography level="body-sm">Push all local changes to the live database.</Typography>
+                            </div>
+                            <Button onClick={handleSaveGmr} loading={savingGmr} size="lg" color="primary">
+                                Save Full Configuration
+                            </Button>
+                        </div>
+
                         {/* 
                         <div className="flex justify-between items-center mt-4">
                             <div>
