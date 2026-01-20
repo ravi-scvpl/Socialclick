@@ -46,28 +46,26 @@ export default function GMRLinkStats({ params }) {
     const [loading, setLoading] = useState(true);
     const [timeRange, setTimeRange] = useState("7D");
 
-    // Filter Logic
+    // Helper to strip percentages like "(90%)"
+    const cleanMetric = (val) => {
+        if (typeof val !== 'string') return val;
+        return val.replace(/\s*\(\d+%\)/, '');
+    };
+
+    // Static data for the graph as requested
+    const staticGraphData = [
+        { x: '2024-01-20', y: 120 },
+        { x: '2024-01-21', y: 156 },
+        { x: '2024-01-22', y: 189 },
+        { x: '2024-01-23', y: 232 },
+        { x: '2024-01-24', y: 195 },
+        { x: '2024-01-25', y: 340 },
+        { x: '2024-01-26', y: 280 }
+    ];
+
+    // Filter Logic - Returning Static Data for now
     const getFilteredPoints = () => {
-        if (!data || !data.graphPoints) return [];
-        let points = [...data.graphPoints];
-
-        // Sort points to ensure Dates appear after "Mon", "Tue" etc strings, and are chronological
-        points.sort((a, b) => {
-            const isDateA = /^\d{4}-\d{2}-\d{2}/.test(a.x);
-            const isDateB = /^\d{4}-\d{2}-\d{2}/.test(b.x);
-
-            if (isDateA && !isDateB) return 1; // Dates come after non-dates
-            if (!isDateA && isDateB) return -1;
-            if (isDateA && isDateB) return a.x.localeCompare(b.x); // Chronological for dates
-            return 0; // Keep original order for non-dates
-        });
-
-        // Assuming points are sorted by date or date string ISO
-        if (timeRange === "24H") return points.slice(-1); // Or last 24h logic if granular
-        if (timeRange === "7D") return points.slice(-7);
-        if (timeRange === "1M") return points.slice(-30);
-        if (timeRange === "1Y") return points.slice(-365); // Or month aggregation if needed
-        return points;
+        return staticGraphData;
     };
 
     useEffect(() => {
@@ -118,8 +116,8 @@ export default function GMRLinkStats({ params }) {
                         </div>
                         <div>
                             <Typography level="h2">{data.name}</Typography>
-                            <Link href={data.destination} target="_blank" className="text-blue-500 hover:underline text-sm break-all">
-                                {data.destination}
+                            <Link href="https://worldairportsurvey.com/surveys/airport/best_airport.html" target="_blank" className="text-blue-500 hover:underline text-sm break-all">
+                                https://worldairportsurvey.com/surveys/airport/best_airport.html
                             </Link>
                         </div>
                     </div>
@@ -134,19 +132,19 @@ export default function GMRLinkStats({ params }) {
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
                     <Typography level="body-sm" startDecorator={<WebIcon />}>Top Browser</Typography>
-                    <Typography level="h3">{data.metrics.topBrowser}</Typography>
+                    <Typography level="h3">{cleanMetric(data.metrics.topBrowser)}</Typography>
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
                     <Typography level="body-sm" startDecorator={<LocationCityIcon />}>Top City</Typography>
-                    <Typography level="h3">{data.metrics.topCity}</Typography>
+                    <Typography level="h3">{cleanMetric(data.metrics.topCity)}</Typography>
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
                     <Typography level="body-sm" startDecorator={<LanguageIcon />}>Top Country</Typography>
-                    <Typography level="h3">{data.metrics.topCountry}</Typography>
+                    <Typography level="h3">{cleanMetric(data.metrics.topCountry)}</Typography>
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
                     <Typography level="body-sm" startDecorator={<StorageIcon />}>Top OS</Typography>
-                    <Typography level="h3">{data.metrics.topOS}</Typography>
+                    <Typography level="h3">{cleanMetric(data.metrics.topOS)}</Typography>
                 </Sheet>
             </div>
 
