@@ -118,7 +118,7 @@ export default function GMRLinkStats({ params }) {
                         </div>
                         <div>
                             <Typography level="h2">{data.name}</Typography>
-                            <Link href={data.destination} target="_blank" className="text-blue-500 hover:underline text-sm">
+                            <Link href={data.destination} target="_blank" className="text-blue-500 hover:underline text-sm break-all">
                                 {data.destination}
                             </Link>
                         </div>
