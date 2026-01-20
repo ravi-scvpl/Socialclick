@@ -189,7 +189,7 @@ export default function GMRLinkStats({ params }) {
                             const height = (point.y / maxY) * 100;
 
                             return (
-                                <div key={i} className="flex flex-col items-center gap-2 w-full">
+                                <div key={i} className="flex flex-col items-center gap-2 w-full h-full justify-end">
                                     <div
                                         className="w-full bg-blue-500 rounded-t-md hover:bg-blue-600 transition-all cursor-pointer relative group"
                                         style={{ height: `${height}%` }}
