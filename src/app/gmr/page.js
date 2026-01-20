@@ -9,14 +9,19 @@ import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import DevicesIcon from "@mui/icons-material/Devices";
 import PublicIcon from '@mui/icons-material/Public';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import LanguageIcon from '@mui/icons-material/Language';
+import WebIcon from '@mui/icons-material/Web';
+import StorageIcon from '@mui/icons-material/Storage';
 
 export default function GMRDashboard() {
     // Static Data
     const staticStats = {
         totalClicks: 12543,
-        dailyClicks: 432,
-        conversionRate: "4.8%",
-        topLocation: "New Delhi, India"
+        topBrowser: "Chrome (72%)",
+        topCity: "New Delhi",
+        topCountry: "India",
+        topOS: "Android"
     };
 
     const gmrLinks = [
@@ -66,49 +71,27 @@ export default function GMRDashboard() {
                 </div>
             </div>
 
-            {/* Quick Stats Row */}
+            {/* Quick Stats Row - Updated Metrics */}
             <div className="flex flex-wrap gap-4">
-                <Sheet
-                    variant="outlined"
-                    sx={{
-                        p: 2,
-                        borderRadius: "lg",
-                        flex: 1,
-                        minWidth: "200px",
-                        boxShadow: "sm",
-                        bgcolor: "white"
-                    }}
-                >
-                    <Typography level="title-sm" startDecorator={<MouseTwoTone />}>Total Clicks</Typography>
-                    <Typography level="h2">{staticStats.totalClicks.toLocaleString()}</Typography>
+                <Sheet variant="outlined" sx={{ p: 2, borderRadius: "lg", flex: 1, minWidth: "180px", boxShadow: "sm", bgcolor: "white" }}>
+                    <Typography level="title-sm" startDecorator={<MouseTwoTone />}>Top Clicks</Typography>
+                    <Typography level="h3">{staticStats.totalClicks.toLocaleString()}</Typography>
                 </Sheet>
-                <Sheet
-                    variant="outlined"
-                    sx={{
-                        p: 2,
-                        borderRadius: "lg",
-                        flex: 1,
-                        minWidth: "200px",
-                        boxShadow: "sm",
-                        bgcolor: "white"
-                    }}
-                >
-                    <Typography level="title-sm" startDecorator={<CompareArrowsIcon />}>Daily Active</Typography>
-                    <Typography level="h2">{staticStats.dailyClicks}</Typography>
+                <Sheet variant="outlined" sx={{ p: 2, borderRadius: "lg", flex: 1, minWidth: "180px", boxShadow: "sm", bgcolor: "white" }}>
+                    <Typography level="title-sm" startDecorator={<WebIcon />}>Top Browser</Typography>
+                    <Typography level="h3">{staticStats.topBrowser}</Typography>
                 </Sheet>
-                <Sheet
-                    variant="outlined"
-                    sx={{
-                        p: 2,
-                        borderRadius: "lg",
-                        flex: 1,
-                        minWidth: "200px",
-                        boxShadow: "sm",
-                        bgcolor: "white"
-                    }}
-                >
-                    <Typography level="title-sm" startDecorator={<PublicIcon />}>Top Location</Typography>
-                    <Typography level="h2">{staticStats.topLocation}</Typography>
+                <Sheet variant="outlined" sx={{ p: 2, borderRadius: "lg", flex: 1, minWidth: "180px", boxShadow: "sm", bgcolor: "white" }}>
+                    <Typography level="title-sm" startDecorator={<LocationCityIcon />}>Top City</Typography>
+                    <Typography level="h3">{staticStats.topCity}</Typography>
+                </Sheet>
+                <Sheet variant="outlined" sx={{ p: 2, borderRadius: "lg", flex: 1, minWidth: "180px", boxShadow: "sm", bgcolor: "white" }}>
+                    <Typography level="title-sm" startDecorator={<LanguageIcon />}>Top Country</Typography>
+                    <Typography level="h3">{staticStats.topCountry}</Typography>
+                </Sheet>
+                <Sheet variant="outlined" sx={{ p: 2, borderRadius: "lg", flex: 1, minWidth: "180px", boxShadow: "sm", bgcolor: "white" }}>
+                    <Typography level="title-sm" startDecorator={<StorageIcon />}>Top OS</Typography>
+                    <Typography level="h3">{staticStats.topOS}</Typography>
                 </Sheet>
             </div>
 
@@ -159,28 +142,16 @@ export default function GMRDashboard() {
                                         </span>
                                     </td>
                                     <td>
-                                        <div className="flex gap-2">
-                                            <Button
-                                                component={Link}
-                                                href={`/gmr/${link.id}`}
-                                                size="sm"
-                                                variant="outlined"
-                                                color="neutral"
-                                                startDecorator={<BarChartIcon />}
-                                            >
-                                                Stats
-                                            </Button>
-                                            <Button
-                                                component="a"
-                                                href={link.destination}
-                                                target="_blank"
-                                                size="sm"
-                                                variant="soft"
-                                                color="primary"
-                                            >
-                                                Visit
-                                            </Button>
-                                        </div>
+                                        <Button
+                                            component={Link}
+                                            href={`/gmr/${link.id}`}
+                                            size="sm"
+                                            variant="outlined"
+                                            color="neutral"
+                                            startDecorator={<BarChartIcon />}
+                                        >
+                                            Stats
+                                        </Button>
                                     </td>
                                 </tr>
                             ))}

@@ -8,6 +8,9 @@ import MouseTwoTone from "@mui/icons-material/MouseTwoTone";
 import DevicesIcon from "@mui/icons-material/Devices";
 import PublicIcon from '@mui/icons-material/Public';
 import LanguageIcon from '@mui/icons-material/Language';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import WebIcon from '@mui/icons-material/Web';
+import StorageIcon from '@mui/icons-material/Storage';
 
 // Static Data Configuration
 const linkData = {
@@ -16,9 +19,10 @@ const linkData = {
         destination: "https://google.com",
         metrics: {
             totalClicks: 5421,
-            uniqueClicks: 4100,
-            topCountry: "India (85%)",
-            topDevice: "Mobile (62%)"
+            topBrowser: "Chrome (85%)",
+            topCity: "Mumbai",
+            topCountry: "India (90%)",
+            topOS: "Android (70%)"
         },
         graphPoints: [
             { x: "Mon", y: 400 }, { x: "Tue", y: 650 }, { x: "Wed", y: 580 },
@@ -31,9 +35,10 @@ const linkData = {
         destination: "https://facebook.com",
         metrics: {
             totalClicks: 4102,
-            uniqueClicks: 2980,
+            topBrowser: "Safari (45%)",
+            topCity: "New York",
             topCountry: "USA (40%)",
-            topDevice: "Mobile (90%)"
+            topOS: "iOS (60%)"
         },
         graphPoints: [
             { x: "Mon", y: 300 }, { x: "Tue", y: 450 }, { x: "Wed", y: 400 },
@@ -46,9 +51,10 @@ const linkData = {
         destination: "http://worldairportsurvey.com/surveys/airport/best_airport.html",
         metrics: {
             totalClicks: 3020,
-            uniqueClicks: 2100,
+            topBrowser: "Chrome (60%)",
+            topCity: "London",
             topCountry: "UK (35%)",
-            topDevice: "Desktop (55%)"
+            topOS: "Windows (50%)"
         },
         graphPoints: [
             { x: "Mon", y: 200 }, { x: "Tue", y: 300 }, { x: "Wed", y: 250 },
@@ -96,27 +102,30 @@ export default function GMRLinkStats({ params }) {
                             </Link>
                         </div>
                     </div>
-                    <Button component="a" href={data.destination} target="_blank">Visit Destination</Button>
                 </div>
             </div>
 
             {/* Metrics Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
                     <Typography level="body-sm" startDecorator={<MouseTwoTone />}>Total Clicks</Typography>
                     <Typography level="h3">{data.metrics.totalClicks.toLocaleString()}</Typography>
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
-                    <Typography level="body-sm" startDecorator={<MouseTwoTone />}>Unique Clicks</Typography>
-                    <Typography level="h3">{data.metrics.uniqueClicks.toLocaleString()}</Typography>
+                    <Typography level="body-sm" startDecorator={<WebIcon />}>Top Browser</Typography>
+                    <Typography level="h3">{data.metrics.topBrowser}</Typography>
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
-                    <Typography level="body-sm" startDecorator={<PublicIcon />}>Top Country</Typography>
+                    <Typography level="body-sm" startDecorator={<LocationCityIcon />}>Top City</Typography>
+                    <Typography level="h3">{data.metrics.topCity}</Typography>
+                </Sheet>
+                <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
+                    <Typography level="body-sm" startDecorator={<LanguageIcon />}>Top Country</Typography>
                     <Typography level="h3">{data.metrics.topCountry}</Typography>
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
-                    <Typography level="body-sm" startDecorator={<DevicesIcon />}>Top Device</Typography>
-                    <Typography level="h3">{data.metrics.topDevice}</Typography>
+                    <Typography level="body-sm" startDecorator={<StorageIcon />}>Top OS</Typography>
+                    <Typography level="h3">{data.metrics.topOS}</Typography>
                 </Sheet>
             </div>
 
