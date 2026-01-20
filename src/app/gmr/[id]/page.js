@@ -190,10 +190,10 @@ export default function GMRLinkStats({ params }) {
 
                 {/* Top 10 Data Grids */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <BarList title="Top 10 Browsers" icon={<WebIcon />} data={data.browsers} colorClass="bg-indigo-500" />
-                    <BarList title="Top 10 Cities" icon={<LocationCityIcon />} data={data.cities} colorClass="bg-green-500" />
-                    <BarList title="Top 10 Countries" icon={<LanguageIcon />} data={data.countries} colorClass="bg-purple-500" />
-                    <BarList title="Top 10 OS" icon={<StorageIcon />} data={data.os} colorClass="bg-orange-500" />
+                    <BarList title="Top Browsers" icon={<WebIcon />} data={data.browsers} colorClass="bg-indigo-500" />
+                    <BarList title="Top Cities" icon={<LocationCityIcon />} data={data.cities} colorClass="bg-green-500" />
+                    <BarList title="Top Countries" icon={<LanguageIcon />} data={data.countries} colorClass="bg-purple-500" />
+                    <BarList title="Top OS" icon={<StorageIcon />} data={data.os} colorClass="bg-orange-500" />
                 </div>
 
             </div>

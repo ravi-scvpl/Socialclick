@@ -148,7 +148,15 @@ export default function AdminPage() {
                 // Add new date
                 points.push({ x: date, y: clicks });
                 // Sort by date logic (simple string sort for YYYY-MM-DD works)
-                points.sort((a, b) => a.x.localeCompare(b.x));
+                points.sort((a, b) => {
+                    // Check if strings look like dates (YYYY-MM-DD)
+                    const isDateA = /^\d{4}-\d{2}-\d{2}$/.test(a.x);
+                    const isDateB = /^\d{4}-\d{2}-\d{2}$/.test(b.x);
+
+                    if (isDateA && !isDateB) return 1; // Dates come after non-dates
+                    if (!isDateA && isDateB) return -1;
+                    return a.x.localeCompare(b.x);
+                });
             }
             data.linkData[linkId].graphPoints = points;
 
