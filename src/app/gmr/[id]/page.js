@@ -54,14 +54,22 @@ export default function GMRLinkStats({ params }) {
 
     // Static data for the graph as requested
     const staticGraphData = [
-        { x: '2024-01-20', y: 120 },
-        { x: '2024-01-21', y: 156 },
-        { x: '2024-01-22', y: 189 },
-        { x: '2024-01-23', y: 232 },
-        { x: '2024-01-24', y: 195 },
-        { x: '2024-01-25', y: 340 },
-        { x: '2024-01-26', y: 280 }
+        { x: '2024-01-20', y: 1200 },
+        { x: '2024-01-21', y: 1560 },
+        { x: '2024-01-22', y: 1890 },
+        { x: '2024-01-23', y: 2320 },
+        { x: '2024-01-24', y: 1950 },
+        { x: '2024-01-25', y: 3400 },
+        { x: '2024-01-26', y: 2800 }
     ];
+
+    // Helper to get top metric from list
+    const getTopMetric = (list, fallback) => {
+        if (list && list.length > 0) {
+            return list[0].name;
+        }
+        return cleanMetric(fallback);
+    };
 
     // Filter Logic - Returning Static Data for now
     const getFilteredPoints = () => {
@@ -132,19 +140,19 @@ export default function GMRLinkStats({ params }) {
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
                     <Typography level="body-sm" startDecorator={<WebIcon />}>Top Browser</Typography>
-                    <Typography level="h3">{cleanMetric(data.metrics.topBrowser)}</Typography>
+                    <Typography level="h3">{getTopMetric(data.browsers, data.metrics.topBrowser)}</Typography>
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
                     <Typography level="body-sm" startDecorator={<LocationCityIcon />}>Top City</Typography>
-                    <Typography level="h3">{cleanMetric(data.metrics.topCity)}</Typography>
+                    <Typography level="h3">{getTopMetric(data.cities, data.metrics.topCity)}</Typography>
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
                     <Typography level="body-sm" startDecorator={<LanguageIcon />}>Top Country</Typography>
-                    <Typography level="h3">{cleanMetric(data.metrics.topCountry)}</Typography>
+                    <Typography level="h3">{getTopMetric(data.countries, data.metrics.topCountry)}</Typography>
                 </Sheet>
                 <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg', bgcolor: 'white' }}>
                     <Typography level="body-sm" startDecorator={<StorageIcon />}>Top OS</Typography>
-                    <Typography level="h3">{cleanMetric(data.metrics.topOS)}</Typography>
+                    <Typography level="h3">{getTopMetric(data.os, data.metrics.topOS)}</Typography>
                 </Sheet>
             </div>
 
