@@ -12,7 +12,7 @@ import LocationCityIcon from '@mui/icons-material/LocationCity';
 import WebIcon from '@mui/icons-material/Web';
 import StorageIcon from '@mui/icons-material/Storage';
 
-// Static Data Configuration
+// Static Data Configuration with Top 10 Lists
 const linkData = {
     "google": {
         name: "GMR GOOGLE LINK CLICK",
@@ -28,7 +28,26 @@ const linkData = {
             { x: "Mon", y: 400 }, { x: "Tue", y: 650 }, { x: "Wed", y: 580 },
             { x: "Thu", y: 890 }, { x: "Fri", y: 1200 }, { x: "Sat", y: 900 }, { x: "Sun", y: 801 }
         ],
-        devices: [{ name: "Mobile", val: 62 }, { name: "Desktop", val: 30 }, { name: "Tablet", val: 8 }]
+        browsers: [
+            { name: "Chrome", val: 85 }, { name: "Safari", val: 8 }, { name: "Firefox", val: 3 },
+            { name: "Edge", val: 2 }, { name: "Samsung Internet", val: 1 }, { name: "Opera", val: 0.5 },
+            { name: "UC Browser", val: 0.2 }, { name: "Brave", val: 0.1 }, { name: "Vivaldi", val: 0.1 }, { name: "Other", val: 0.1 }
+        ],
+        cities: [
+            { name: "Mumbai", val: 30 }, { name: "New Delhi", val: 25 }, { name: "Bangalore", val: 15 },
+            { name: "Hyderabad", val: 10 }, { name: "Chennai", val: 5 }, { name: "Kolkata", val: 4 },
+            { name: "Pune", val: 3 }, { name: "Ahmedabad", val: 3 }, { name: "Jaipur", val: 2 }, { name: "Surat", val: 3 }
+        ],
+        countries: [
+            { name: "India", val: 90 }, { name: "USA", val: 5 }, { name: "UK", val: 2 },
+            { name: "UAE", val: 1 }, { name: "Canada", val: 0.5 }, { name: "Singapore", val: 0.5 },
+            { name: "Australia", val: 0.3 }, { name: "Germany", val: 0.3 }, { name: "France", val: 0.2 }, { name: "Other", val: 0.2 }
+        ],
+        os: [
+            { name: "Android", val: 70 }, { name: "iOS", val: 20 }, { name: "Windows", val: 8 },
+            { name: "MacOS", val: 1.5 }, { name: "Linux", val: 0.3 }, { name: "Chrome OS", val: 0.1 },
+            { name: "Ubuntu", val: 0.05 }, { name: "Fedora", val: 0.02 }, { name: "Tizen", val: 0.02 }, { name: "Other", val: 0.01 }
+        ]
     },
     "fb": {
         name: "GMR FB LINK CLICK",
@@ -44,7 +63,26 @@ const linkData = {
             { x: "Mon", y: 300 }, { x: "Tue", y: 450 }, { x: "Wed", y: 400 },
             { x: "Thu", y: 600 }, { x: "Fri", y: 850 }, { x: "Sat", y: 700 }, { x: "Sun", y: 802 }
         ],
-        devices: [{ name: "Mobile", val: 90 }, { name: "Desktop", val: 5 }, { name: "Tablet", val: 5 }]
+        browsers: [
+            { name: "Safari", val: 45 }, { name: "Chrome", val: 40 }, { name: "Firefox", val: 10 },
+            { name: "Edge", val: 3 }, { name: "Samsung Internet", val: 1 }, { name: "Opera", val: 0.5 },
+            { name: "UC Browser", val: 0.2 }, { name: "Brave", val: 0.1 }, { name: "Vivaldi", val: 0.1 }, { name: "Other", val: 0.1 }
+        ],
+        cities: [
+            { name: "New York", val: 25 }, { name: "Los Angeles", val: 20 }, { name: "Chicago", val: 15 },
+            { name: "Houston", val: 10 }, { name: "Phoenix", val: 5 }, { name: "Philadelphia", val: 5 },
+            { name: "San Antonio", val: 5 }, { name: "San Diego", val: 5 }, { name: "Dallas", val: 5 }, { name: "San Jose", val: 5 }
+        ],
+        countries: [
+            { name: "USA", val: 40 }, { name: "India", val: 20 }, { name: "UK", val: 15 },
+            { name: "Canada", val: 10 }, { name: "Australia", val: 5 }, { name: "Germany", val: 4 },
+            { name: "France", val: 3 }, { name: "Brazil", val: 1 }, { name: "Japan", val: 1 }, { name: "Other", val: 1 }
+        ],
+        os: [
+            { name: "iOS", val: 60 }, { name: "Android", val: 30 }, { name: "Windows", val: 8 },
+            { name: "MacOS", val: 1.5 }, { name: "Linux", val: 0.3 }, { name: "Chrome OS", val: 0.1 },
+            { name: "Ubuntu", val: 0.05 }, { name: "Fedora", val: 0.02 }, { name: "Tizen", val: 0.02 }, { name: "Other", val: 0.01 }
+        ]
     },
     "display": {
         name: "GMR DISPLAY CLICK",
@@ -60,9 +98,47 @@ const linkData = {
             { x: "Mon", y: 200 }, { x: "Tue", y: 300 }, { x: "Wed", y: 250 },
             { x: "Thu", y: 400 }, { x: "Fri", y: 600 }, { x: "Sat", y: 550 }, { x: "Sun", y: 720 }
         ],
-        devices: [{ name: "Mobile", val: 40 }, { name: "Desktop", val: 55 }, { name: "Tablet", val: 5 }]
+        browsers: [
+            { name: "Chrome", val: 60 }, { name: "Edge", val: 20 }, { name: "Firefox", val: 10 },
+            { name: "Safari", val: 5 }, { name: "Opera", val: 2 }, { name: "Samsung Internet", val: 1 },
+            { name: "Brave", val: 1 }, { name: "Vivaldi", val: 0.5 }, { name: "UC Browser", val: 0.3 }, { name: "Other", val: 0.2 }
+        ],
+        cities: [
+            { name: "London", val: 35 }, { name: "Manchester", val: 15 }, { name: "Birmingham", val: 10 },
+            { name: "Glasgow", val: 8 }, { name: "Liverpool", val: 7 }, { name: "Bristol", val: 5 },
+            { name: "Edinburgh", val: 5 }, { name: "Leeds", val: 5 }, { name: "Sheffield", val: 5 }, { name: "Other", val: 5 }
+        ],
+        countries: [
+            { name: "UK", val: 35 }, { name: "USA", val: 20 }, { name: "Germany", val: 10 },
+            { name: "France", val: 10 }, { name: "India", val: 5 }, { name: "Canada", val: 5 },
+            { name: "Australia", val: 5 }, { name: "Italy", val: 4 }, { name: "Spain", val: 3 }, { name: "Other", val: 3 }
+        ],
+        os: [
+            { name: "Windows", val: 50 }, { name: "MacOS", val: 20 }, { name: "Android", val: 15 },
+            { name: "iOS", val: 10 }, { name: "Linux", val: 3 }, { name: "Chrome OS", val: 1 },
+            { name: "Ubuntu", val: 0.5 }, { name: "Fedora", val: 0.2 }, { name: "Tizen", val: 0.2 }, { name: "Other", val: 0.1 }
+        ]
     }
 };
+
+const BarList = ({ title, icon, data, colorClass }) => (
+    <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white', height: '100%' }}>
+        <Typography level="h4" mb={2} startDecorator={icon}>{title}</Typography>
+        <div className="flex flex-col gap-3">
+            {data.map((item, i) => (
+                <div key={i}>
+                    <div className="flex justify-between mb-1">
+                        <span className="text-sm font-medium">{item.name}</span>
+                        <span className="text-sm text-gray-500">{item.val}%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2.5">
+                        <div className={`${colorClass} h-2.5 rounded-full`} style={{ width: `${item.val}%` }}></div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </Sheet>
+);
 
 export default function GMRLinkStats({ params }) {
     const id = params.id;
@@ -129,14 +205,12 @@ export default function GMRLinkStats({ params }) {
                 </Sheet>
             </div>
 
-            {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Graphs Area */}
+            <div className="flex flex-col gap-6">
 
-                {/* Mock Chart Area */}
-                <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white' }} className="lg:col-span-2 min-h-[400px]">
+                {/* Click Performance Chart */}
+                <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white' }} className="min-h-[400px]">
                     <Typography level="h4" mb={2}>Click Performance (Last 7 Days)</Typography>
-
-                    {/* Simple CSS Bar Chart for Mock Visual */}
                     <div className="h-[300px] flex items-end justify-between gap-2 px-4 pb-4 border-b">
                         {data.graphPoints.map((point, i) => (
                             <div key={i} className="flex flex-col items-center gap-2 w-full">
@@ -154,33 +228,13 @@ export default function GMRLinkStats({ params }) {
                     </div>
                 </Sheet>
 
-                {/* Device Distribution */}
-                <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white' }}>
-                    <Typography level="h4" mb={2}>Device Breakdown</Typography>
-                    <div className="flex flex-col gap-4">
-                        {data.devices.map((device, i) => (
-                            <div key={i}>
-                                <div className="flex justify-between mb-1">
-                                    <span className="text-sm font-medium">{device.name}</span>
-                                    <span className="text-sm text-gray-500">{device.val}%</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                    <div className="bg-indigo-500 h-2.5 rounded-full" style={{ width: `${device.val}%` }}></div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="mt-8 p-4 bg-gray-50 rounded-lg border">
-                        <Typography level="title-sm" mb={1} startDecorator={<LanguageIcon />}>Geographic Data</Typography>
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-sm"><span>India</span> <span>45%</span></div>
-                            <div className="flex justify-between text-sm"><span>USA</span> <span>30%</span></div>
-                            <div className="flex justify-between text-sm"><span>UK</span> <span>15%</span></div>
-                            <div className="flex justify-between text-sm"><span>Other</span> <span>10%</span></div>
-                        </div>
-                    </div>
-                </Sheet>
+                {/* Top 10 Data Grids */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <BarList title="Top 10 Browsers" icon={<WebIcon />} data={data.browsers} colorClass="bg-indigo-500" />
+                    <BarList title="Top 10 Cities" icon={<LocationCityIcon />} data={data.cities} colorClass="bg-green-500" />
+                    <BarList title="Top 10 Countries" icon={<LanguageIcon />} data={data.countries} colorClass="bg-purple-500" />
+                    <BarList title="Top 10 OS" icon={<StorageIcon />} data={data.os} colorClass="bg-orange-500" />
+                </div>
 
             </div>
         </main>
