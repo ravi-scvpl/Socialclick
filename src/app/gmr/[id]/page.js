@@ -13,29 +13,51 @@ import WebIcon from '@mui/icons-material/Web';
 import StorageIcon from '@mui/icons-material/Storage';
 import { useState, useEffect } from "react";
 
-const BarList = ({ title, icon, data, colorClass }) => (
-    <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white', height: '100%' }}>
-        <Typography level="h4" mb={2} startDecorator={icon}>{title}</Typography>
-        <div className="flex flex-col gap-3">
-            {data.map((item, i) => (
-                <div key={i}>
-                    <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium">{item.name}</span>
-                        <span className="text-sm text-gray-500">{item.val}%</span>
+const BarList = ({ title, icon, data, colorClass }) => {
+    // Calculate max value for relative bar sizing
+    const maxVal = Math.max(...data.map(d => d.val), 100);
+
+    return (
+        <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white', height: '100%' }}>
+            <Typography level="h4" mb={2} startDecorator={icon}>{title}</Typography>
+            <div className="flex flex-col gap-3">
+                {data.map((item, i) => (
+                    <div key={i}>
+                        <div className="flex justify-between mb-1">
+                            <span className="text-sm font-medium">{item.name}</span>
+                            <span className="text-sm text-gray-500">{item.val.toLocaleString()}</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-2.5">
+                            <div
+                                className={`${colorClass} h-2.5 rounded-full`}
+                                style={{ width: `${(item.val / maxVal) * 100}%` }}
+                            ></div>
+                        </div>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2.5">
-                        <div className={`${colorClass} h-2.5 rounded-full`} style={{ width: `${item.val}%` }}></div>
-                    </div>
-                </div>
-            ))}
-        </div>
-    </Sheet>
-);
+                ))}
+            </div>
+        </Sheet>
+    );
+};
 
 export default function GMRLinkStats({ params }) {
     const id = params.id;
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [timeRange, setTimeRange] = useState("7D");
+
+    // Filter Logic
+    const getFilteredPoints = () => {
+        if (!data || !data.graphPoints) return [];
+        const points = [...data.graphPoints];
+
+        // Assuming points are sorted by date or date string ISO
+        if (timeRange === "24H") return points.slice(-1); // Or last 24h logic if granular
+        if (timeRange === "7D") return points.slice(-7);
+        if (timeRange === "1M") return points.slice(-30);
+        if (timeRange === "1Y") return points.slice(-365); // Or month aggregation if needed
+        return points;
+    };
 
     useEffect(() => {
         const loadData = async () => {
@@ -122,23 +144,41 @@ export default function GMRLinkStats({ params }) {
 
                 {/* Click Performance Chart */}
                 <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white' }} className="min-h-[400px]">
-                    <Typography level="h4" mb={2}>Click Performance (Last 7 Days)</Typography>
+                    <div className="flex justify-between items-center mb-4">
+                        <Typography level="h4">Click Performance</Typography>
+                        <div className="flex bg-gray-100 p-1 rounded-md">
+                            {['24H', '7D', '1M', '1Y'].map(range => (
+                                <button
+                                    key={range}
+                                    onClick={() => setTimeRange(range)}
+                                    className={`px-3 py-1 text-sm rounded-sm transition-all ${timeRange === range ? 'bg-white shadow-sm font-semibold' : 'text-gray-500 hover:text-gray-700'}`}
+                                >
+                                    {range}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     <div className="h-[300px] flex items-end justify-between gap-2 px-4 pb-4 border-b">
-                        {data.graphPoints.map((point, i) => {
+                        {getFilteredPoints().map((point, i) => {
                             const formatDate = (dateStr) => {
                                 const date = new Date(dateStr);
                                 if (isNaN(date.getTime())) return dateStr;
                                 return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                             };
 
+                            // Calculate height relative to max in this set (min 100 for safety)
+                            const maxY = Math.max(...getFilteredPoints().map(p => p.y), 100);
+                            const height = (point.y / maxY) * 100;
+
                             return (
                                 <div key={i} className="flex flex-col items-center gap-2 w-full">
                                     <div
                                         className="w-full bg-blue-500 rounded-t-md hover:bg-blue-600 transition-all cursor-pointer relative group"
-                                        style={{ height: `${(point.y / 1500) * 100}%` }}
+                                        style={{ height: `${height}%` }}
                                     >
-                                        <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                            {point.y}
+                                        <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                                            {point.y.toLocaleString()} clicks <br /> {point.x}
                                         </span>
                                     </div>
                                     <span className="text-xs text-gray-500 font-bold whitespace-nowrap">{formatDate(point.x)}</span>

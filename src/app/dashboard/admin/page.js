@@ -17,6 +17,70 @@ import {
     Textarea
 } from "@mui/joy";
 import { getUser } from "@/lib/authHandlers";
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import IconButton from '@mui/joy/IconButton';
+
+const ListEditor = ({ title, data, onSave }) => {
+    const [list, setList] = useState(data || []);
+
+    // Sync local state when prop data changes (e.g. switching links)
+    useEffect(() => {
+        setList(data || []);
+    }, [data]);
+
+    const handleChange = (index, field, value) => {
+        const newList = [...list];
+        newList[index][field] = value;
+        setList(newList);
+        onSave(newList);
+    };
+
+    const handleDelete = (index) => {
+        const newList = list.filter((_, i) => i !== index);
+        setList(newList);
+        onSave(newList);
+    };
+
+    const handleAdd = () => {
+        const newList = [...list, { name: "", val: 0 }];
+        setList(newList);
+        onSave(newList);
+    };
+
+    return (
+        <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'sm' }}>
+            <div className="flex justify-between items-center mb-2">
+                <Typography level="title-md">{title}</Typography>
+                <IconButton size="sm" onClick={handleAdd} color="success" variant="soft"><AddIcon /></IconButton>
+            </div>
+            <div className="flex flex-col gap-2 max-h-[200px] overflow-y-auto">
+                {list.map((item, i) => (
+                    <div key={i} className="flex gap-2 items-center">
+                        <Input
+                            size="sm"
+                            placeholder="Name"
+                            value={item.name}
+                            onChange={(e) => handleChange(i, 'name', e.target.value)}
+                            sx={{ flex: 1 }}
+                        />
+                        <Input
+                            size="sm"
+                            type="number"
+                            placeholder="Val"
+                            value={item.val}
+                            onChange={(e) => handleChange(i, 'val', Number(e.target.value))}
+                            sx={{ width: '80px' }}
+                        />
+                        <IconButton size="sm" color="danger" variant="plain" onClick={() => handleDelete(i)}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </div>
+                ))}
+            </div>
+        </Sheet>
+    );
+};
 
 export default function AdminPage() {
     const [user, setUser] = useState(null);
@@ -48,6 +112,19 @@ export default function AdminPage() {
         date: new Date().toISOString().slice(0, 10),
         clicks: 0
     });
+
+    const updateList = (linkId, listName, newList) => {
+        if (!gmrJson) return;
+        try {
+            let data = JSON.parse(gmrJson);
+            if (data.linkData && data.linkData[linkId]) {
+                data.linkData[linkId][listName] = newList;
+                setGmrJson(JSON.stringify(data, null, 2));
+            }
+        } catch (e) {
+            console.error("Error updating list", e);
+        }
+    };
 
     const handleAddDailyLog = async () => {
         if (!gmrJson) return;
