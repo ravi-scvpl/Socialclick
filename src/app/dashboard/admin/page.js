@@ -10,6 +10,11 @@ import {
     ModalDialog,
     FormControl,
     FormLabel,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanel,
+    Textarea
 } from "@mui/joy";
 import { getUser } from "@/lib/authHandlers";
 
@@ -32,6 +37,11 @@ export default function AdminPage() {
     });
     const [isAdding, setIsAdding] = useState(false);
 
+    // GMR Data State
+    const [gmrJson, setGmrJson] = useState("");
+    const [loadingGmr, setLoadingGmr] = useState(false);
+    const [savingGmr, setSavingGmr] = useState(false);
+
     useEffect(() => {
         const userData = getUser();
         if (!userData) {
@@ -44,6 +54,7 @@ export default function AdminPage() {
         }
         setUser(userData);
         fetchLinks(userData.id);
+        fetchGmrData();
     }, []);
 
     const fetchLinks = async (userId) => {
@@ -63,6 +74,53 @@ export default function AdminPage() {
             console.error("Error fetching links:", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchGmrData = async () => {
+        setLoadingGmr(true);
+        try {
+            const res = await fetch("/api/gmr");
+            const data = await res.json();
+            if (data.success) {
+                setGmrJson(JSON.stringify(data.data, null, 2));
+            }
+        } catch (error) {
+            console.error("Error fetching GMR data:", error);
+        } finally {
+            setLoadingGmr(false);
+        }
+    };
+
+    const handleSaveGmr = async () => {
+        setSavingGmr(true);
+        try {
+            // Validate JSON
+            let parsedData;
+            try {
+                parsedData = JSON.parse(gmrJson);
+            } catch (e) {
+                alert("Invalid JSON format");
+                setSavingGmr(false);
+                return;
+            }
+
+            const res = await fetch("/api/gmr", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data: parsedData })
+            });
+            const result = await res.json();
+            if (result.success) {
+                alert("GMR Data Updated Successfully!");
+            } else {
+                alert("Failed to update: " + result.message);
+            }
+        } catch (error) {
+            console.error("Error saving GMR data:", error);
+            alert("Error saving data");
+        } finally {
+            setSavingGmr(false);
         }
     };
 
@@ -118,42 +176,81 @@ export default function AdminPage() {
                 <div className="text-sm">Welcome, Admin {user?.name}</div>
             </div>
 
-            <Sheet variant="outlined" sx={{ borderRadius: "md", overflow: "auto" }}>
-                <Table stickyHeader hoverRow>
-                    <thead>
-                        <tr>
-                            <th style={{ width: "20%" }}>Short URL</th>
-                            <th style={{ width: "25%" }}>Original URL</th>
-                            <th style={{ width: "15%" }}>Owner</th>
-                            <th style={{ width: "10%" }}>Clicks</th>
-                            <th style={{ width: "15%" }}>Created</th>
-                            <th style={{ width: "15%" }}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {links.map((link) => (
-                            <tr key={link.id}>
-                                <td>{link.shortURL}</td>
-                                <td className="truncate max-w-[200px]" title={link.originalURL}>
-                                    {link.originalURL}
-                                </td>
-                                <td>{link.user?.email || "Unknown"}</td>
-                                <td>{link.clicks}</td>
-                                <td>{new Date(link.createdAt).toLocaleDateString()}</td>
-                                <td>
-                                    <Button
-                                        size="sm"
-                                        variant="soft"
-                                        onClick={() => handleEditClick(link)}
-                                    >
-                                        Edit Stats
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            </Sheet>
+            <Tabs defaultValue={0} sx={{ borderRadius: 'lg' }}>
+                <TabList>
+                    <Tab>Link Management</Tab>
+                    <Tab>GMR Data Editor</Tab>
+                </TabList>
+                <TabPanel value={0} sx={{ p: 2 }}>
+                    <Sheet variant="outlined" sx={{ borderRadius: "md", overflow: "auto" }}>
+                        <Table stickyHeader hoverRow>
+                            <thead>
+                                <tr>
+                                    <th style={{ width: "20%" }}>Short URL</th>
+                                    <th style={{ width: "25%" }}>Original URL</th>
+                                    <th style={{ width: "15%" }}>Owner</th>
+                                    <th style={{ width: "10%" }}>Clicks</th>
+                                    <th style={{ width: "15%" }}>Created</th>
+                                    <th style={{ width: "15%" }}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {links.map((link) => (
+                                    <tr key={link.id}>
+                                        <td>{link.shortURL}</td>
+                                        <td className="truncate max-w-[200px]" title={link.originalURL}>
+                                            {link.originalURL}
+                                        </td>
+                                        <td>{link.user?.email || "Unknown"}</td>
+                                        <td>{link.clicks}</td>
+                                        <td>{new Date(link.createdAt).toLocaleDateString()}</td>
+                                        <td>
+                                            <Button
+                                                size="sm"
+                                                variant="soft"
+                                                onClick={() => handleEditClick(link)}
+                                            >
+                                                Edit Stats
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </Sheet>
+                </TabPanel>
+
+                <TabPanel value={1} sx={{ p: 2 }}>
+                    <div className="flex flex-col gap-4 max-w-4xl">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <Typography level="h4">GMR Dynamic Config</Typography>
+                                <Typography level="body-sm">Edit the JSON below to update stats, graphs, and Top 10 lists instantly.</Typography>
+                            </div>
+                            <Button onClick={handleSaveGmr} loading={savingGmr} color="primary">
+                                Save GMR Data
+                            </Button>
+                        </div>
+
+                        {loadingGmr ? (
+                            <div>Loading JSON...</div>
+                        ) : (
+                            <Textarea
+                                minRows={20}
+                                maxRows={30}
+                                value={gmrJson}
+                                onChange={(e) => setGmrJson(e.target.value)}
+                                sx={{
+                                    fontFamily: 'monospace',
+                                    fontSize: '14px',
+                                    padding: '1rem',
+                                    borderRadius: 'md'
+                                }}
+                            />
+                        )}
+                    </div>
+                </TabPanel>
+            </Tabs>
 
             <Modal open={openEdit} onClose={() => setOpenEdit(false)}>
                 <ModalDialog>

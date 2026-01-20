@@ -78,7 +78,14 @@ model Traffic {
   source    Json?
 }
 
+
 enum Role {
   USER
   ADMIN
+}
+
+model GmrData {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  data      Json
+  updatedAt DateTime @updatedAt
 }

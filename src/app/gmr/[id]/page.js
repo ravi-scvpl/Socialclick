@@ -11,115 +11,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import WebIcon from '@mui/icons-material/Web';
 import StorageIcon from '@mui/icons-material/Storage';
-
-// Static Data Configuration with Top 10 Lists
-const linkData = {
-    "google": {
-        name: "GMR GOOGLE LINK CLICK",
-        destination: "https://google.com",
-        metrics: {
-            totalClicks: 5421,
-            topBrowser: "Chrome (85%)",
-            topCity: "Mumbai",
-            topCountry: "India (90%)",
-            topOS: "Android (70%)"
-        },
-        graphPoints: [
-            { x: "Mon", y: 400 }, { x: "Tue", y: 650 }, { x: "Wed", y: 580 },
-            { x: "Thu", y: 890 }, { x: "Fri", y: 1200 }, { x: "Sat", y: 900 }, { x: "Sun", y: 801 }
-        ],
-        browsers: [
-            { name: "Chrome", val: 85 }, { name: "Safari", val: 8 }, { name: "Firefox", val: 3 },
-            { name: "Edge", val: 2 }, { name: "Samsung Internet", val: 1 }, { name: "Opera", val: 0.5 },
-            { name: "UC Browser", val: 0.2 }, { name: "Brave", val: 0.1 }, { name: "Vivaldi", val: 0.1 }, { name: "Other", val: 0.1 }
-        ],
-        cities: [
-            { name: "Mumbai", val: 30 }, { name: "New Delhi", val: 25 }, { name: "Bangalore", val: 15 },
-            { name: "Hyderabad", val: 10 }, { name: "Chennai", val: 5 }, { name: "Kolkata", val: 4 },
-            { name: "Pune", val: 3 }, { name: "Ahmedabad", val: 3 }, { name: "Jaipur", val: 2 }, { name: "Surat", val: 3 }
-        ],
-        countries: [
-            { name: "India", val: 90 }, { name: "USA", val: 5 }, { name: "UK", val: 2 },
-            { name: "UAE", val: 1 }, { name: "Canada", val: 0.5 }, { name: "Singapore", val: 0.5 },
-            { name: "Australia", val: 0.3 }, { name: "Germany", val: 0.3 }, { name: "France", val: 0.2 }, { name: "Other", val: 0.2 }
-        ],
-        os: [
-            { name: "Android", val: 70 }, { name: "iOS", val: 20 }, { name: "Windows", val: 8 },
-            { name: "MacOS", val: 1.5 }, { name: "Linux", val: 0.3 }, { name: "Chrome OS", val: 0.1 },
-            { name: "Ubuntu", val: 0.05 }, { name: "Fedora", val: 0.02 }, { name: "Tizen", val: 0.02 }, { name: "Other", val: 0.01 }
-        ]
-    },
-    "fb": {
-        name: "GMR FB LINK CLICK",
-        destination: "https://facebook.com",
-        metrics: {
-            totalClicks: 4102,
-            topBrowser: "Safari (45%)",
-            topCity: "New York",
-            topCountry: "USA (40%)",
-            topOS: "iOS (60%)"
-        },
-        graphPoints: [
-            { x: "Mon", y: 300 }, { x: "Tue", y: 450 }, { x: "Wed", y: 400 },
-            { x: "Thu", y: 600 }, { x: "Fri", y: 850 }, { x: "Sat", y: 700 }, { x: "Sun", y: 802 }
-        ],
-        browsers: [
-            { name: "Safari", val: 45 }, { name: "Chrome", val: 40 }, { name: "Firefox", val: 10 },
-            { name: "Edge", val: 3 }, { name: "Samsung Internet", val: 1 }, { name: "Opera", val: 0.5 },
-            { name: "UC Browser", val: 0.2 }, { name: "Brave", val: 0.1 }, { name: "Vivaldi", val: 0.1 }, { name: "Other", val: 0.1 }
-        ],
-        cities: [
-            { name: "New York", val: 25 }, { name: "Los Angeles", val: 20 }, { name: "Chicago", val: 15 },
-            { name: "Houston", val: 10 }, { name: "Phoenix", val: 5 }, { name: "Philadelphia", val: 5 },
-            { name: "San Antonio", val: 5 }, { name: "San Diego", val: 5 }, { name: "Dallas", val: 5 }, { name: "San Jose", val: 5 }
-        ],
-        countries: [
-            { name: "USA", val: 40 }, { name: "India", val: 20 }, { name: "UK", val: 15 },
-            { name: "Canada", val: 10 }, { name: "Australia", val: 5 }, { name: "Germany", val: 4 },
-            { name: "France", val: 3 }, { name: "Brazil", val: 1 }, { name: "Japan", val: 1 }, { name: "Other", val: 1 }
-        ],
-        os: [
-            { name: "iOS", val: 60 }, { name: "Android", val: 30 }, { name: "Windows", val: 8 },
-            { name: "MacOS", val: 1.5 }, { name: "Linux", val: 0.3 }, { name: "Chrome OS", val: 0.1 },
-            { name: "Ubuntu", val: 0.05 }, { name: "Fedora", val: 0.02 }, { name: "Tizen", val: 0.02 }, { name: "Other", val: 0.01 }
-        ]
-    },
-    "display": {
-        name: "GMR DISPLAY CLICK",
-        destination: "http://worldairportsurvey.com/surveys/airport/best_airport.html",
-        metrics: {
-            totalClicks: 3020,
-            topBrowser: "Chrome (60%)",
-            topCity: "London",
-            topCountry: "UK (35%)",
-            topOS: "Windows (50%)"
-        },
-        graphPoints: [
-            { x: "Mon", y: 200 }, { x: "Tue", y: 300 }, { x: "Wed", y: 250 },
-            { x: "Thu", y: 400 }, { x: "Fri", y: 600 }, { x: "Sat", y: 550 }, { x: "Sun", y: 720 }
-        ],
-        browsers: [
-            { name: "Chrome", val: 60 }, { name: "Edge", val: 20 }, { name: "Firefox", val: 10 },
-            { name: "Safari", val: 5 }, { name: "Opera", val: 2 }, { name: "Samsung Internet", val: 1 },
-            { name: "Brave", val: 1 }, { name: "Vivaldi", val: 0.5 }, { name: "UC Browser", val: 0.3 }, { name: "Other", val: 0.2 }
-        ],
-        cities: [
-            { name: "London", val: 35 }, { name: "Manchester", val: 15 }, { name: "Birmingham", val: 10 },
-            { name: "Glasgow", val: 8 }, { name: "Liverpool", val: 7 }, { name: "Bristol", val: 5 },
-            { name: "Edinburgh", val: 5 }, { name: "Leeds", val: 5 }, { name: "Sheffield", val: 5 }, { name: "Other", val: 5 }
-        ],
-        countries: [
-            { name: "UK", val: 35 }, { name: "USA", val: 20 }, { name: "Germany", val: 10 },
-            { name: "France", val: 10 }, { name: "India", val: 5 }, { name: "Canada", val: 5 },
-            { name: "Australia", val: 5 }, { name: "Italy", val: 4 }, { name: "Spain", val: 3 }, { name: "Other", val: 3 }
-        ],
-        os: [
-            { name: "Windows", val: 50 }, { name: "MacOS", val: 20 }, { name: "Android", val: 15 },
-            { name: "iOS", val: 10 }, { name: "Linux", val: 3 }, { name: "Chrome OS", val: 1 },
-            { name: "Ubuntu", val: 0.5 }, { name: "Fedora", val: 0.2 }, { name: "Tizen", val: 0.2 }, { name: "Other", val: 0.1 }
-        ]
-    }
-};
+import { useState, useEffect } from "react";
 
 const BarList = ({ title, icon, data, colorClass }) => (
     <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white', height: '100%' }}>
@@ -142,7 +34,27 @@ const BarList = ({ title, icon, data, colorClass }) => (
 
 export default function GMRLinkStats({ params }) {
     const id = params.id;
-    const data = linkData[id];
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const res = await fetch("/api/gmr", { cache: "no-store" });
+                const json = await res.json();
+                if (json.success && json.data.linkData && json.data.linkData[id]) {
+                    setData(json.data.linkData[id]);
+                }
+            } catch (error) {
+                console.error("Failed to load GMR detail data", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, [id]);
+
+    if (loading) return <div className="p-10 flex justify-center">Loading Stats...</div>;
 
     if (!data) {
         return (
