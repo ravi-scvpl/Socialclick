@@ -57,7 +57,11 @@ export default function GMRLinkStats({ params }) {
     // Helper to get top metric from list
     const getTopMetric = (list, fallback) => {
         if (list && list.length > 0) {
-            return list[0].name;
+            // Find item with highest value
+            const topItem = list.reduce((prev, current) => {
+                return (prev.val > current.val) ? prev : current;
+            });
+            return topItem.name;
         }
         return cleanMetric(fallback);
     };
