@@ -44,7 +44,7 @@ export default function GMRLinkStats({ params }) {
     const id = params.id;
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [timeRange, setTimeRange] = useState("7D");
+
 
     // Helper to strip percentages like "(90%)"
     const cleanMetric = (val) => {
@@ -174,15 +174,9 @@ export default function GMRLinkStats({ params }) {
                     <div className="flex justify-between items-center mb-4">
                         <Typography level="h4">Click Performance</Typography>
                         <div className="flex bg-gray-100 p-1 rounded-md">
-                            {['24H', '7D', '1M', '1Y'].map(range => (
-                                <button
-                                    key={range}
-                                    onClick={() => setTimeRange(range)}
-                                    className={`px-3 py-1 text-sm rounded-sm transition-all ${timeRange === range ? 'bg-white shadow-sm font-semibold' : 'text-gray-500 hover:text-gray-700'}`}
-                                >
-                                    {range}
-                                </button>
-                            ))}
+                            <span className="px-3 py-1 text-sm rounded-sm bg-white shadow-sm font-semibold text-gray-800">
+                                Last 7 Days
+                            </span>
                         </div>
                     </div>
 
