@@ -48,8 +48,8 @@ const initialData = {
                 topOS: "Android (70%)"
             },
             graphPoints: [
-                { x: "Mon", y: 400 }, { x: "Tue", y: 650 }, { x: "Wed", y: 580 },
-                { x: "Thu", y: 890 }, { x: "Fri", y: 1200 }, { x: "Sat", y: 900 }, { x: "Sun", y: 801 }
+                { x: "2026-01-15", y: 400 }, { x: "2026-01-16", y: 650 }, { x: "2026-01-17", y: 580 },
+                { x: "2026-01-18", y: 890 }, { x: "2026-01-19", y: 1200 }, { x: "2026-01-20", y: 900 }, { x: "2026-01-21", y: 801 }
             ],
             browsers: [
                 { name: "Chrome", val: 85 }, { name: "Safari", val: 8 }, { name: "Firefox", val: 3 },
@@ -79,8 +79,8 @@ const initialData = {
                 topOS: "iOS (60%)"
             },
             graphPoints: [
-                { x: "Mon", y: 300 }, { x: "Tue", y: 450 }, { x: "Wed", y: 400 },
-                { x: "Thu", y: 600 }, { x: "Fri", y: 850 }, { x: "Sat", y: 700 }, { x: "Sun", y: 802 }
+                { x: "2026-01-15", y: 300 }, { x: "2026-01-16", y: 450 }, { x: "2026-01-17", y: 400 },
+                { x: "2026-01-18", y: 600 }, { x: "2026-01-19", y: 850 }, { x: "2026-01-20", y: 700 }, { x: "2026-01-21", y: 802 }
             ],
             browsers: [
                 { name: "Safari", val: 45 }, { name: "Chrome", val: 40 }, { name: "Firefox", val: 10 },
@@ -110,8 +110,8 @@ const initialData = {
                 topOS: "Windows (50%)"
             },
             graphPoints: [
-                { x: "Mon", y: 200 }, { x: "Tue", y: 300 }, { x: "Wed", y: 250 },
-                { x: "Thu", y: 400 }, { x: "Fri", y: 600 }, { x: "Sat", y: 550 }, { x: "Sun", y: 720 }
+                { x: "2026-01-15", y: 200 }, { x: "2026-01-16", y: 300 }, { x: "2026-01-17", y: 250 },
+                { x: "2026-01-18", y: 400 }, { x: "2026-01-19", y: 600 }, { x: "2026-01-20", y: 550 }, { x: "2026-01-21", y: 720 }
             ],
             browsers: [
                 { name: "Chrome", val: 60 }, { name: "Edge", val: 20 }, { name: "Firefox", val: 10 },

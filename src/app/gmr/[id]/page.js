@@ -52,16 +52,7 @@ export default function GMRLinkStats({ params }) {
         return val.replace(/\s*\(\d+%\)/, '');
     };
 
-    // Static data for the graph as requested
-    const staticGraphData = [
-        { x: '2024-01-20', y: 1200 },
-        { x: '2024-01-21', y: 1560 },
-        { x: '2024-01-22', y: 1890 },
-        { x: '2024-01-23', y: 2320 },
-        { x: '2024-01-24', y: 1950 },
-        { x: '2024-01-25', y: 3400 },
-        { x: '2024-01-26', y: 2800 }
-    ];
+
 
     // Helper to get top metric from list
     const getTopMetric = (list, fallback) => {
@@ -71,9 +62,28 @@ export default function GMRLinkStats({ params }) {
         return cleanMetric(fallback);
     };
 
-    // Filter Logic - Returning Static Data for now
+    // Filter Logic - Dynamic Last 7 Days
     const getFilteredPoints = () => {
-        return staticGraphData;
+        if (!data || !data.graphPoints) return [];
+
+        const points = [];
+        const today = new Date();
+
+        // Loop for last 7 days (including today)
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
+
+            // Find data for this date
+            const existingPoint = data.graphPoints.find(p => p.x === dateStr);
+
+            points.push({
+                x: dateStr,
+                y: existingPoint ? existingPoint.y : 0
+            });
+        }
+        return points;
     };
 
     useEffect(() => {
@@ -179,8 +189,9 @@ export default function GMRLinkStats({ params }) {
                     <div className="h-[300px] flex items-end justify-between gap-2 px-4 pb-4 border-b">
                         {getFilteredPoints().map((point, i) => {
                             const formatDate = (dateStr) => {
-                                const date = new Date(dateStr);
-                                if (isNaN(date.getTime())) return dateStr;
+                                // Parse manually to avoid timezone shifts
+                                const [y, m, d] = dateStr.split('-').map(Number);
+                                const date = new Date(y, m - 1, d);
                                 return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                             };
 
