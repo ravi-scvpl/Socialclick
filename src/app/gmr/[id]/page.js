@@ -173,7 +173,7 @@ export default function GMRLinkStats({ params }) {
             {/* Main Graphs Area */}
             <div className="flex flex-col gap-6">
 
-                {/* Click Performance Chart */}
+                {/* Click Performance Chart (Commented Out)
                 <Sheet sx={{ p: 3, borderRadius: 'xl', boxShadow: 'md', bgcolor: 'white' }} className="min-h-[400px]">
                     <div className="flex justify-between items-center mb-4">
                         <Typography level="h4">Click Performance</Typography>
@@ -213,6 +213,7 @@ export default function GMRLinkStats({ params }) {
                         })}
                     </div>
                 </Sheet>
+                */}
 
                 {/* Top 10 Data Grids */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
