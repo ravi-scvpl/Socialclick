@@ -1,8 +1,6 @@
 
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import { Prisma as prisma } from "@/app/api/prisma";
 
 // Default Initial Data (Bootstrapping)
 const initialData = {
@@ -133,39 +131,62 @@ const initialData = {
     }
 };
 
+let memoryStore = initialData;
+
+function isValidMongoUrl(url) {
+    if (!url || typeof url !== "string") return false;
+    return url.startsWith("mongodb://") || url.startsWith("mongodb+srv://");
+}
+
 export async function GET() {
     try {
+        if (!isValidMongoUrl(process.env.DATABASE_URL)) {
+            console.warn("DATABASE_URL is not a valid MongoDB URL; returning initial/in-memory data.");
+            return NextResponse.json({ data: memoryStore, success: true });
+        }
+
         const record = await prisma.gmrData.findFirst();
-        if (record) {
+        if (record && record.data) {
+            memoryStore = record.data;
             return NextResponse.json({ data: record.data, success: true });
         } else {
-            // Return defaults if db is empty
-            return NextResponse.json({ data: initialData, success: true });
+            return NextResponse.json({ data: memoryStore, success: true });
         }
     } catch (error) {
-        return NextResponse.json({ message: "Error fetching data", error: error.message }, { status: 500 });
+        console.warn("Database error in /api/gmr GET, serving fallback data:", error?.message || error);
+        return NextResponse.json({ data: memoryStore, success: true, warning: error?.message });
     }
 }
 
 export async function POST(req) {
     try {
         const body = await req.json();
-        // Ideally verify ADMIN role here via token/session if possible, 
-        // but the Admin Panel page logic protects the UI.
+        const dataToSave = body?.data;
+        if (!dataToSave) {
+            return NextResponse.json({ message: "No data provided", success: false }, { status: 400 });
+        }
+
+        memoryStore = dataToSave;
+
+        if (!isValidMongoUrl(process.env.DATABASE_URL)) {
+            console.warn("DATABASE_URL is not a valid MongoDB URL; updated in-memory store only.");
+            return NextResponse.json({ message: "Updated in-memory store successfully", success: true });
+        }
 
         const existing = await prisma.gmrData.findFirst();
         if (existing) {
             await prisma.gmrData.update({
                 where: { id: existing.id },
-                data: { data: body.data }
+                data: { data: dataToSave }
             });
         } else {
             await prisma.gmrData.create({
-                data: { data: body.data }
+                data: { data: dataToSave }
             });
         }
         return NextResponse.json({ message: "Updated successfully", success: true });
     } catch (error) {
-        return NextResponse.json({ message: "Error updating data", error: error.message }, { status: 500 });
+        console.warn("Database error in /api/gmr POST, preserved in memory:", error?.message || error);
+        return NextResponse.json({ message: "Updated in-memory store (database error)", success: true, warning: error?.message });
     }
 }

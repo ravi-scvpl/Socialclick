@@ -17,6 +17,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const rawAdsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID?.trim();
+  const isPlaceholderAdsense =
+    !rawAdsenseId ||
+    rawAdsenseId.includes("0000000000000000") ||
+    rawAdsenseId === "ca-pub-";
+  const formattedAdsenseId = rawAdsenseId
+    ? rawAdsenseId.startsWith("ca-pub-")
+      ? rawAdsenseId
+      : `ca-pub-${rawAdsenseId}`
+    : null;
+
   return (
     <html lang="en">
       <head>
@@ -29,16 +40,18 @@ export default function RootLayout({ children }) {
       <script
         async
         src="https://kit.fontawesome.com/a7908c27f8.js"
-        crossorigin="anonymous"
+        crossOrigin="anonymous"
         strategy="lazyOnload"
       ></script>
 
-      <script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
-        crossorigin="anonymous"
-        strategy="beforeInteractive"
-      ></script>
+      {!isPlaceholderAdsense && formattedAdsenseId && (
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${formattedAdsenseId}`}
+          crossOrigin="anonymous"
+          strategy="beforeInteractive"
+        ></script>
+      )}
 
       <body className={poppins.className}>
         <CookiesModal />
