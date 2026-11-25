@@ -1,6 +1,9 @@
 [build]
-  command = "npx prisma generate && next build"
+  command = "prisma generate && next build"
   publish = ".next"
 
 [functions]
-  included_files = ["node_modules/.prisma/client/**"]
+  included_files = [
+    "node_modules/.prisma/client/**",
+    "prisma/**"
+  ]
