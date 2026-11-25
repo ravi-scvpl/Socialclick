@@ -1,12 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: "standalone",
-  experimental: {
-    outputFileTracingIncludes: {
-      "/**": ["./node_modules/.prisma/client/**"],
-    },
-  },
-};
+const nextConfig = {};
 
 module.exports = nextConfig;
-
