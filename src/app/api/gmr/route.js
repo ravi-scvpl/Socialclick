@@ -1,8 +1,10 @@
 
-import { PrismaClient } from "@prisma/client";
+import { Prisma } from "../prisma";
 import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+export const dynamic = "force-dynamic";
+
+const prisma = Prisma;
 
 // Default Initial Data (Bootstrapping)
 const initialData = {
